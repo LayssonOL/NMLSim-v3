@@ -7,6 +7,9 @@
 #include "string.h"
 #include <chrono>
 
+// TODO: I should update the XML file and the magnet section to receive a new property
+// where the designer can define an array of possible magnetization values through the simulation time steps
+//
 //Parse a line into a value
 int parseLine(char *line){
 	// This assumes that a digit will be found and the line ends in " Kb".
