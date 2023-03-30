@@ -20,6 +20,7 @@ class LLGMagnet : public Magnet{
 private:
 	string id;	//ID
 	double magnetization[3];	//Magnetization vector [M_x, M_y, M_z]
+	std::vector<std::pair<double, double[3]>> dynamicMagnetization;	//An array of Magnetization vectors [M_x, M_y, M_z] indexed by the period of time
 	double initialMagnetization[3];	//Initial magnetization value
 	double newMagnetization[3];	//Temporary magnetization value (the magnetization in the next time step)
 	vector <Neighbor *> neighbors;	//List of neighbors
@@ -70,8 +71,12 @@ public:
 	void buildMagnet(vector <string> descParts);
 	//Returns the magnetization
 	double * getMagnetization();
+	//Returns the dynamic magnetization
+  std::vector<std::pair<double, double[3]>> * getDynamicMagnetization();
 	//Update the magnetization
 	void updateMagnetization();
+	//Update the dynamic magnetization
+	void updateDynamicMagnetization();
 	//Add a magnet as a neigbor based on a RADIUS (misspell the variable here)
 	void addNeighbor(Magnet * neighbor, double * ratio);
 	//Print in the output file
@@ -80,6 +85,8 @@ public:
 	string getId();
 	//Set the magnetization to a predefined value
 	void setMagnetization(double * magnetization);
+	//Set the dynamic magnetization to a predefined value
+	void setDynamicMagnetization(std::vector<std::pair<double, double[3]>> * magnetizations);
 	//Reset the magnetization to its initial value
 	void resetMagnetization();
 	//Returns x coordinates

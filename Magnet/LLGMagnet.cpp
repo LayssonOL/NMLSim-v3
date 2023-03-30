@@ -67,9 +67,17 @@ LLGMagnet::LLGMagnet(string id, FileReader * fReader){
 	//Dynamic magnetization
 	vector<string> dynamicMagParts;
 	dynamicMagParts = splitString(fReader->getItemProperty(DESIGN, id, "dynamicMagnetization"), ',');
-	for(int i=0; i<3; i++){
-		this->magnetization[i] = stod(parts[i]);
-		this->initialMagnetization[i] = this->magnetization[i];
+	for(int i=0; i<dynamicMagParts.size(); i++){
+    vector<string> magTime = splitString(dynamicMagParts[i], '-');
+    if (magTime[0] == '1') {
+
+    } else if (magTime[0] == '0') {
+
+    } else {
+
+    }
+
+		this->dynamicMagnetization[i] = stod(dynamicMagParts[i]);
 	}
 
 	//Fixed magnetization

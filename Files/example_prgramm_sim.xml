@@ -1,0 +1,169 @@
+<!-- ALL measures of time are in nanoseconds and ALL metric measures are in nanometers -->
+<!-- This is the main circuit properties, such as technology, engine and others -->
+<!-- Each engine had different properties to be setted in this field -->
+<circuit>
+	<!-- There are 2 engines: LLG and Behaviour. There is only iNML technology for now -->
+	<property technology="iNML" engine="LLG"/>
+	<!-- There are two possible different methods for the LLG engine, the RK4 and the RKW2 - Runge Kutta 4th order and Runge Kutta Weak 2nd order -->
+	<!-- Be mindfull that the RK4 method disconsiders the temperature -->
+	<property method="RK4"/>
+	<!-- There are 4 simulationMode: exaustive, direct, repetitive and verbose -->
+	<property simulationMode="verbose"/>
+	<!-- The number of simulations to be done in the repetitive mode -->
+	<property repetitions="10"/>
+	<!-- The report time step. Starting at time 0, the program reports at each reportStep. Only used in verbose mode -->
+	<property reportStep="0.01"/>
+	<!-- Gilbert damping factor -->
+	<property alpha="0.05"/>
+	<!-- Saturation Magnetization in A/m -->
+	<property Ms="800000"/>
+	<!-- Temperature in K. Be mindfull that the RK-Weak order 2.0 (RKW2) is used for T > 0 and the RK of fourth order (RK4) for T == 0 -->
+	<property temperature="300.0"/>
+	<!-- Discretization of time in nanoseconds. It's highly recommended using very low timeStep -->
+	<property timeStep="0.0001"/>
+	<!-- Simulation Duration in nanoseconds -->
+	<property simTime="25.0"/>
+	<!-- Properties for the heavy material for spin hall effect -->
+	<property spinAngle="0.4"/>
+	<property spinDifusionLenght="3.5"/>
+	<!-- Thickness in nanometers -->
+	<property heavyMaterialThickness="5"/>
+	<!-- Radius of the considered neighborhood. We recomend using values of 300 for more efficciency. -->
+	<property neighborhoodRatio="300.0"/>
+</circuit>
+
+<!-- This is the clock phases properties -->
+<clockPhase>
+	<!-- Each clock phase must be an item -->
+	<!-- Each clock phase must have a different name, which can be whatever name -->
+	<!-- The format for RKW2 uses a clock signal with 6 values. The 3 first are external field (x,y,z) and the 3 last are current field (x,y,z) -->
+	<!-- Users can use both an external field and a current field with LLG. In order to not use one of them, just leave its fields as 0 -->
+	<!-- The format for the Behaviour engine uses only one value for clock signal. The value corresponds to a field applied on x direction -->
+	<!-- The value for signal in the Behaviour engine needs to be in the [0,1] interval, where 0 represents no clock and 1 represents 100% force -->
+	<!-- Phases can have different durations, but be mindfull of their sincronization -->
+	<item name="switch">
+		<property initialSignal="150.0,0.0,0.0,0.0,0.0,0.0"/>
+		<property endSignal="0.0,0.0,0.0,0.0,0.0,0.0"/>
+		<property duration="5.0"/>
+	</item>
+	<item name="hold">
+		<property initialSignal="0.0,0.0,0.0,0.0,0.0,0.0"/>
+		<property endSignal="0.0,0.0,0.0,0.0,0.0,0.0"/>
+		<property duration="5.0"/>
+	</item>
+	<item name="reset">
+		<property initialSignal="0.0,0.0,0.0,0.0,0.0,0.0"/>
+		<property endSignal="150.0,0.0,0.0,0.0,0.0,0.0"/>
+		<property duration="5.0"/>
+	</item>
+	<item name="relax">
+		<property initialSignal="150.0,0.0,0.0,0.0,0.0,0.0"/>
+		<property endSignal="150.0,0.0,0.0,0.0,0.0,0.0"/>
+		<property duration="5.0"/>
+	</item>
+</clockPhase>
+
+<!-- This is the clock zone properties -->
+<clockZone>
+	<!-- Each clock zone must be an item -->
+	<!-- Each clock zone must have an integer numerical name, starting in 0 and following growing sequence (0,1,2,3,etc) -->
+	<!-- All phases that a zone percieve must be listed -->
+	<!-- The order of the phases matter a lot, since the zone will start with the first phase and follow the order from top to bottom -->
+	<!-- The order of the phases are ciclycal, which means the first phase start again after the end of the last one -->
+	<item name="0">
+		<property phase="reset"/>
+		<property phase="relax"/>
+		<property phase="switch"/>
+		<property phase="hold"/>
+	</item>
+	<item name="1">
+		<property phase="hold"/>
+		<property phase="reset"/>
+		<property phase="relax"/>
+		<property phase="switch"/>
+	</item>
+	<item name="2">
+		<property phase="switch"/>
+		<property phase="hold"/>
+		<property phase="reset"/>
+		<property phase="relax"/>
+	</item>
+	<item name="3">
+		<property phase="relax"/>
+		<property phase="switch"/>
+		<property phase="hold"/>
+		<property phase="reset"/>
+	</item>
+</clockZone>
+
+<!-- This is the components properties -->
+<components>
+	<!-- List here all different geometries of magnets in the circuit -->
+	<!-- This part also is used to determine if a magnet is fixed or not -->
+	<!-- Each different geometry must be an item -->
+	<!-- Each geometry must have a unique name, which can be whatever -->
+	<item name="magOut">
+		<!-- The width of the magnet in nanometers -->
+		<property width="50.0"/>
+		<!-- The height of the magnet in nanometers -->
+		<property height="100.0"/>
+		<!-- The thickness of the magnet in nanometers -->
+		<property thickness="15.0"/>
+		<!-- The cuts in the magnet geometry are defined in nanometers -->
+		<!-- Positive cuts are made on the right side, while negative are made in the left side -->
+		<!-- The cutted side will have the absolute value of the cut reduced from its height, whereas the non-cutted side remains the same -->
+		<!-- The cut in the superior part of the magnet -->
+		<property topCut="0.0"/>
+		<!-- The cut in the inferior part of the magnet -->
+		<property bottomCut="0.0"/>
+	</item>
+	<item name="magIn">
+		<property width="50.0"/>
+		<property height="100.0"/>
+		<property thickness="15.0"/>
+		<property topCut="0.0"/>
+		<property bottomCut="0.0"/>
+	</item>
+</components>
+
+<!-- This is the design properties -->
+<design>
+	<!-- List here all magnets of the circuit. Note that the geometry section does not insert any magnet in the circuit! -->
+	<!-- Each magnet must be an item -->
+	<!-- Each magnet must have a unique name, which can be whatever -->
+	<item name="i0">
+		<!-- The component field describes which previously declared geometry the magnet have -->
+		<property component="magIn"/>
+		<!-- The myType field have 3 possible values: input, output or regular -->
+		<!-- Input magnets have their magnetization changed in the exaustive mode -->
+		<!-- Output magnets have their magnetization reported in the end of the direct and exaustive modes -->
+		<!-- Regular magnets have no special interaction -->
+		<property myType="input"/>
+		<!-- fixedMagnetization can be either true or false. true means the magnet is not influenced by clock -->
+		<property fixedMagnetization="true"/>
+		<!-- Position of the center of the magnet -->
+		<property position="0.0,0.0"/>
+		<!-- ALL magnets must be in a clockZone, even if they are fixedMagnetization = true!!!! -->
+		<property clockZone="0"/>
+		<!-- Initial value for the magnetization -->
+		<!-- RKW2 and RK4 engines use 3 values (x,y,z). Behaviour uses only one (y) -->
+		<property magnetization="0.1411,0.99,0.0"/>
+	</item>
+	<item name="mag1">
+		<property component="magIn"/>
+		<property myType="regular"/>
+		<property fixedMagnetization="false"/>
+		<property position="60.0,0.0"/>
+		<property clockZone="0"/>
+		<property magnetization="0.99,0.141,0.0"/>
+		<property dynamicMagnetization="1-5,0-5,0"/>
+	</item>
+	<item name="mag2">
+		<property component="magIn"/>
+		<property myType="regular"/>
+		<property fixedMagnetization="false"/>
+		<property position="120.0,0.0"/>
+		<property clockZone="1"/>
+		<property magnetization="0.99,0.141,0.0"/>
+	</item>
+</design>
