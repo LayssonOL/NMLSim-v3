@@ -1,4 +1,6 @@
 #include "LLGMagnet.h"
+#include <utility>
+#include <vector>
 
 //Forward declaration of static variables
 double LLGMagnet::alpha;
@@ -68,16 +70,24 @@ LLGMagnet::LLGMagnet(string id, FileReader * fReader){
 	vector<string> dynamicMagParts;
 	dynamicMagParts = splitString(fReader->getItemProperty(DESIGN, id, "dynamicMagnetization"), ',');
 	for(int i=0; i<dynamicMagParts.size(); i++){
+
     vector<string> magTime = splitString(dynamicMagParts[i], '-');
-    if (magTime[0] == '1') {
+    std::vector<double> magnetizationValues{};
 
-    } else if (magTime[0] == '0') {
-
+    if (magTime[0] == "1") {
+      // magnetization value to represent Boolean 1
+      // component y with positive value near to 1
+      magnetizationValues = {0.141, 0.99, 0};
+    } else if (magTime[0] == "0") {
+      // magnetization value to represent Boolean 0
+      // component y with negative value
+      magnetizationValues = {0.141, -0.99, 0};
     } else {
-
+      // magnetization components to represent the unstable state
+      magnetizationValues = {0.99, 0.141, 0};
     }
-
-		this->dynamicMagnetization[i] = stod(dynamicMagParts[i]);
+    
+    this->dynamicMagnetization.push_back(make_pair(stod(magTime[1]), magnetizationValues));
 	}
 
 	//Fixed magnetization
@@ -356,6 +366,10 @@ double * LLGMagnet::getMagnetization(){
 	return this->magnetization;
 }
 
+std::vector<std::pair<double, std::vector<double>>> LLGMagnet::getDynamicMagnetization(){
+	return this->dynamicMagnetization;
+}
+
 void LLGMagnet::setMimic(Magnet * mimic){
 	if(mimic == NULL)
 		return;
@@ -408,6 +422,12 @@ void LLGMagnet::setMagnetization(double * magnetization){
 	this->magnetization[0] = magnetization[0];
 	this->magnetization[1] = magnetization[1];
 	this->magnetization[2] = magnetization[2];
+}
+
+void LLGMagnet::setDynamicMagnetization(std::vector<std::pair<double, std::vector<double>>> const& magnetizations) {
+  for (std::pair<double, std::vector<double>> p: magnetizations) {
+    this->dynamicMagnetization.push_back(p);
+  } 
 }
 
 void LLGMagnet::resetMagnetization(){

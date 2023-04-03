@@ -17,6 +17,8 @@ protected:
 public:
 	//Returns the current magnetization value
 	virtual double * getMagnetization() = 0;
+	//Returns the current dynamic magnetization values
+	virtual std::vector<std::pair<double, std::vector<double>>> getDynamicMagnetization() = 0;
 	//Compute the magnetization for the next step of time
 	virtual void calculateMagnetization(ClockZone * zone) = 0;
 	//Update the magnetization
@@ -31,6 +33,8 @@ public:
 	virtual string getId() = 0;
 	//Set the magnetization value
 	virtual void setMagnetization(double * magnetization) = 0;
+	//Set the dynamic magnetization to a predefined value
+	void setDynamicMagnetization(std::vector<std::pair<double, std::vector<double>>> * magnetizations);
 	//Set the magnetization value to the original default
 	virtual void resetMagnetization() = 0;
 	//Return the list of neighbors
