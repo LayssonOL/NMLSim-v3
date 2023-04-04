@@ -28,6 +28,7 @@ enum simulationType{
 enum simulationExecution{
 	INVALIDSIMULATION,
 	DIRECT,
+	DYNAMIC,
 	EXAUSTIVE,
 	VERBOSE,
 	REPETITIVE

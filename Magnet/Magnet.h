@@ -21,8 +21,12 @@ public:
 	virtual std::vector<std::pair<double, std::vector<double>>> getDynamicMagnetization() = 0;
 	//Compute the magnetization for the next step of time
 	virtual void calculateMagnetization(ClockZone * zone) = 0;
+	//Compute the magnetization for the next step of time
+	virtual void calculateDynamicMagnetization(ClockZone * zone) = 0;
 	//Update the magnetization
 	virtual void updateMagnetization() = 0;
+	//Update the magnetization
+	virtual void updateDynamicMagnetization() = 0;
 	//Add a magnet as a neighbor
 	virtual void addNeighbor(Magnet * neighbor, double * weight) = 0;
 	//Print the desired data into a file

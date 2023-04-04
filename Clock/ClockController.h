@@ -18,6 +18,8 @@ public:
 	ClockController(vector <ClockZone *> zones, vector <ClockPhase *> phases, double deltaTime);
 	//Update the system by one step of time
 	void nextTimeStep();
+	//Update the system by one step of time based on dynamic magnetization values
+	void dynamicNextTimeStep();
 	//Add a magnet to a clock zone
 	void addMagnetToZone(Magnet * magnet, int zoneIndex);
 	//Dump all magnets values in the file

@@ -26,6 +26,10 @@ void Circuit::nextTimeStep(){
 	this->clockCtrl->nextTimeStep();
 }
 
+void Circuit::dynamicNextTimeStep(){
+	this->clockCtrl->dynamicNextTimeStep();
+}
+
 Magnet* Circuit::getMagnet(string inOrOut, string id){
 	if(inOrOut == "input"){
 		//Check for an input

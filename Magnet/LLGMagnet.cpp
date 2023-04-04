@@ -177,7 +177,7 @@ void LLGMagnet::calculateMagnetization(ClockZone * zone){
 		
 		for(int i=0; i<3; i++){
 			if(this->fixedMagnetization){
-				//If the magnetization is fixed, force all external field sorces to be 0
+				//If the magnetization is fixed, force all external field sources to be 0
 				auxSig[i] = 0;
 				i_s[i] = 0;
 				half_is[i] = 0;
@@ -300,6 +300,16 @@ void LLGMagnet::calculateMagnetization(ClockZone * zone){
 
 	//Free memory for this local variable
 	free(signal);
+}
+
+//Compute the dynamic magnetization for the next time step
+void LLGMagnet::calculateDynamicMagnetization(ClockZone * zone){
+  // If the magnet is an INPUT and has a vector of dynamic magnetization values
+  if (this->fixedMagnetization && this->dynamicMagnetization.size() > 0) {
+      
+  } else {
+    this->calculateMagnetization(zone);
+  }
 }
 
 //Some dark magics to compute f term, used in the RK4 method

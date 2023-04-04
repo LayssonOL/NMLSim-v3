@@ -51,6 +51,46 @@ void ClockController::nextTimeStep(){
 	}
 }
 
+void ClockController::dynamicNextTimeStep(){
+	//For every clock zone...
+	for(int i=0; i<this->zones.size(); i++){
+		vector<Magnet *> magnets = zones[i]->getAllMagnets();
+		//Update their magnets magnetization
+		for(int j=0; j<magnets.size(); j++){
+			magnets[j]->calculateDynamicMagnetization(zones[i]);
+		}
+		//Update the values
+		for(int j=0; j<magnets.size(); j++){
+			magnets[j]->updateDynamicMagnetization();
+		}
+		// this->zones[i]->updateMagnets();
+		//Update the time in the phase
+		this->zones[i]->incrementStepsInPhase();
+		//Check if the phase has ended
+		if(this->zones[i]->isPhaseEnded(this->deltaTime)){
+			string nextPhase;
+			vector <string> phasesOrder = this->zones[i]->getPhases();
+			//Finds the index of the current phase in the order
+			for(int j=0; j<phasesOrder.size(); j++){
+				if(this->zones[i]->getZonePhase() == phasesOrder[j]){
+					if(j == phasesOrder.size()-1){
+						nextPhase = phasesOrder[0];
+					} else{
+						nextPhase = phasesOrder[j+1];
+					}
+				}
+			}
+			//Retrives the next phase
+			ClockPhase * nextPhaseAux;
+			for(int j=0; j<this->phases.size(); j++)
+				if(this->phases[j]->getPhaseName() == nextPhase)
+					nextPhaseAux = phases[j];
+			//Update the phase
+			this->zones[i]->updatePhase(nextPhaseAux);
+		}
+	}
+}
+
 void ClockController::addMagnetToZone(Magnet * magnet, int zoneIndex){
 	if(zoneIndex >= 0 && zoneIndex < this->zones.size())
 		this->zones[zoneIndex]->addMagnet(magnet);

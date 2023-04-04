@@ -36,7 +36,7 @@ public:
     //Returns the current magnetization
 	double * getMagnetization();
 	//Returns the dynamic magnetization
-  std::vector<std::pair<double, double>> getDynamicMagnetization();
+  std::vector<std::pair<double, std::vector<double>>> getDynamicMagnetization();
 	//Compute the future magnetization depending on the clock phase
 	void calculateMagnetization(ClockZone * zone);
 	//Update the current magnetization to the future magnetization

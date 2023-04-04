@@ -27,6 +27,8 @@ public:
 	void addOutputMagnet(Magnet * magnet);
 	//Simulates the next step of time
 	void nextTimeStep();
+	//Simulates the next step of time based on dynamic magnetization values
+	void dynamicNextTimeStep();
 	//Returns a input or output magnet
 	Magnet* getMagnet(string inOrOut, string id);
 	//Returns a regular magnet

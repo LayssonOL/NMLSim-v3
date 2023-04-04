@@ -67,6 +67,8 @@ public:
 	LLGMagnet(string id, FileReader * fReader);
 	//Compute the magnetization
 	void calculateMagnetization(ClockZone * zone);
+	//Compute the dynamic magnetization
+	void calculateDynamicMagnetization(ClockZone * zone);
 	//Build the magnet from a description vector
 	void buildMagnet(vector <string> descParts);
 	//Returns the magnetization

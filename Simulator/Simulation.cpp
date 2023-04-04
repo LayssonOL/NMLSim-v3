@@ -73,6 +73,37 @@ void Simulation::verboseSimulation(double reportDeltaTime){
 	}
 }
 
+void Simulation::dynamicSimulation(double reportDeltaTime){
+	double auxTimer = 0.0;
+	cout << "Starting verbose simulation...\n";
+	outFile << "Time,";
+	
+	//Write the output file header
+	this->circuit->makeHeader(&outFile);
+	outFile << endl;
+	//Print the values for time = 0
+	outFile << currentTime << ",";
+	this->circuit->dumpMagnetsValues(&outFile);
+	outFile << endl;
+
+	//While the simulation does not reach the end...
+	while(this->currentTime < this->simulationDuration){
+		//Update auxiliar timer, which is used to check the report time step
+		auxTimer += this->deltaTime;
+		//Simulate next time step
+		this->circuit->dynamicNextTimeStep();
+		//Update timer
+		this->currentTime += this->deltaTime;
+		//Dump values in case the report step is reached
+		if(auxTimer >= reportDeltaTime){
+			outFile << currentTime << ",";
+			this->circuit->dumpMagnetsValues(&outFile);
+			outFile << endl;
+			auxTimer = 0.0;
+		}
+	}
+}
+
 void Simulation::exaustiveSimulation(){
 	//Compute the number of combinations for exaustive simulation
 	int inputSize = circuit->getInputsSize();

@@ -35,6 +35,8 @@ private:
 	void buildNeighbors();
 	//Perform the verbose simulation
 	void verboseSimulation(double reportDeltaTime);
+	//Perform the dynamic simulation
+	void dynamicSimulation(double reportDeltaTime);
 	//Perform the exaustive simulation
 	void exaustiveSimulation();
 	//Perform the direct simulation
