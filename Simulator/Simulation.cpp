@@ -75,7 +75,7 @@ void Simulation::verboseSimulation(double reportDeltaTime){
 
 void Simulation::dynamicSimulation(double reportDeltaTime){
 	double auxTimer = 0.0;
-	cout << "Starting verbose simulation...\n";
+	cout << "Starting dynamic simulation...\n";
 	outFile << "Time,";
 	
 	//Write the output file header
@@ -91,7 +91,7 @@ void Simulation::dynamicSimulation(double reportDeltaTime){
 		//Update auxiliar timer, which is used to check the report time step
 		auxTimer += this->deltaTime;
 		//Simulate next time step
-		this->circuit->dynamicNextTimeStep();
+		this->circuit->dynamicNextTimeStep(currentTime);
 		//Update timer
 		this->currentTime += this->deltaTime;
 		//Dump values in case the report step is reached
@@ -198,6 +198,9 @@ void Simulation::simulate(){
 		break;
 		case REPETITIVE:{
 			repetitiveSimulation();
+		}
+		case DYNAMIC:{
+			dynamicSimulation(stod(fReader->getProperty(CIRCUIT, "reportStep")));
 		}
 		break;
 	}
@@ -318,6 +321,9 @@ void Simulation::buildClkCtrl(){
 			this->circuit = new Circuit(zones, phases, this->deltaTime);
 		}
 		break;
+    default: {
+	    cout << "Invalid Simulation Type...I don't know what to do :(";
+    }
 	}
 	cout << "Finished building clock controller!\n";
 }
@@ -377,12 +383,15 @@ void Simulation::buildMagnets(){
 		}
 		break;
 		case LLG:{
+	    cout << " LLG...\n";
 			//Get all magnets items from XML file
 			vector<string> magnetsIds = fReader->getItems(DESIGN);
+	    cout << " getItems...\n";
 			//For each magnet
 			for(int i=0; i<magnetsIds.size(); i++){
 				//Build the new magnet
 				Magnet * magnet = (Magnet *) new LLGMagnet(magnetsIds[i], fReader);
+
 				//Check if the type is input, output or regular
 				string magType = fReader->getItemProperty(DESIGN, magnetsIds[i], "myType");
 				if(magType == "input"){
@@ -394,10 +403,12 @@ void Simulation::buildMagnets(){
 				}
 				//Get the clock zone and add it
 				string clkZoneStr = fReader->getItemProperty(DESIGN, magnetsIds[i], "clockZone");
+	      cout << " mag " << i << " clockZone => " << clkZoneStr << "...\n";
 				if(clkZoneStr != "none"){
 					this->circuit->addMagnetToZone(magnet, stoi(clkZoneStr));
 				}
 			}
+	    cout << " First for...\n";
 			//Only check for mimics after all magnets are instanciated
 			for(int i=0; i<magnetsIds.size(); i++){
 				//Check if there is a mimic and add it
@@ -407,6 +418,7 @@ void Simulation::buildMagnets(){
 					(static_cast<LLGMagnet *> (magnet))->setMimic(circuit->getMagnet(mimicId));
 				}
 			}
+	    cout << " Second for...\n";
 		}
 		break;
 	}

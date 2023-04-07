@@ -18,7 +18,7 @@ private:
 	magnetType myType;	//Input, output or regular
 	double magnetization;	//Y magnetization from -1 to 1
 	double initialMagnetization;	//Value for the initial state
-	std::vector<std::pair<double, double>> dynamicMagnetization;	//An array of Magnetization values indexed by the period of time
+	std::map<double, double> dynamicMagnetization;	//An array of Magnetization values indexed by the period of time
 	double tempMagnetization;	//Auxiliar variable
 	bool fixedMagnetization;	//No field effect from xml file
 	vector <Neighbor *> neighbors;	//List of neighbors magnets
@@ -36,11 +36,15 @@ public:
     //Returns the current magnetization
 	double * getMagnetization();
 	//Returns the dynamic magnetization
-  std::vector<std::pair<double, std::vector<double>>> getDynamicMagnetization();
+  std::map<double, std::vector<double>> getDynamicMagnetization();
 	//Compute the future magnetization depending on the clock phase
 	void calculateMagnetization(ClockZone * zone);
+	//Compute the dynamic magnetization
+	void calculateDynamicMagnetization(ClockZone * zone);
 	//Update the current magnetization to the future magnetization
 	void updateMagnetization();
+	//Update the current dynamic magnetization to the future magnetization
+	void updateDynamicMagnetization(double const& simStep);
 	//Print values into file
 	void dumpValues(ofstream * outFile);
 	//Print header into file
@@ -50,7 +54,7 @@ public:
 	//Set the current magnetization to a determined value
 	void setMagnetization(double * magnetization);
 	//Set the dynamic magnetization to a predefined value
-	void setDynamicMagnetization(std::vector<std::pair<double, double>> magnetizations);
+	void setDynamicMagnetization(std::map<double, std::vector<double>> const& magnetizations);
 	//Returns if another magnet is a neighboor
 	bool isNeighbor(ThiagoMagnet * magnet);
 	//Adds another magnet as a neighbor dependind on a neighborhood radius

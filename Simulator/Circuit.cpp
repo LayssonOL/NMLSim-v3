@@ -26,8 +26,8 @@ void Circuit::nextTimeStep(){
 	this->clockCtrl->nextTimeStep();
 }
 
-void Circuit::dynamicNextTimeStep(){
-	this->clockCtrl->dynamicNextTimeStep();
+void Circuit::dynamicNextTimeStep(double const& timeStep){
+	this->clockCtrl->dynamicNextTimeStep(timeStep);
 }
 
 Magnet* Circuit::getMagnet(string inOrOut, string id){

@@ -68,6 +68,12 @@ double * ThiagoMagnet::getMagnetization(){
 	return &this->magnetization;
 }
 
+std::map<double, std::vector<double>> ThiagoMagnet::getDynamicMagnetization(){
+  std::map<double, std::vector<double>> magnetizationOverTimeSteps{};
+  magnetizationOverTimeSteps.emplace(0, std::vector<double>{this->magnetization});
+  return magnetizationOverTimeSteps;
+}
+
 void ThiagoMagnet::calculateMagnetization(ClockZone * zone){
 	// The variable gaussian_value is the Gaussian-distributed random variable
 	default_random_engine generator(chrono::system_clock::now().time_since_epoch().count());
@@ -111,7 +117,22 @@ void ThiagoMagnet::calculateMagnetization(ClockZone * zone){
 	}
 }
 
+//Compute the dynamic magnetization for the next time step
+void ThiagoMagnet::calculateDynamicMagnetization(ClockZone * zone){
+  // If the magnet is an INPUT and has a vector of dynamic magnetization values
+  // We don't need to calculate the new magnetization
+  if (this->fixedMagnetization && this->dynamicMagnetization.size() > 0) {
+    return;     
+  } 
+  this->calculateMagnetization(zone);
+}
+
 void ThiagoMagnet::updateMagnetization(){
+	if(!this->fixedMagnetization)
+		this->magnetization = this->tempMagnetization;
+}
+
+void ThiagoMagnet::updateDynamicMagnetization(double const& simStep = 0){
 	if(!this->fixedMagnetization)
 		this->magnetization = this->tempMagnetization;
 }
@@ -126,6 +147,12 @@ string ThiagoMagnet::getId(){
 
 void ThiagoMagnet::setMagnetization(double * magnetization){
 	this->tempMagnetization = this->magnetization = *magnetization;
+}
+
+void ThiagoMagnet::setDynamicMagnetization(std::map<double, std::vector<double>> const& magnetizations) {
+  for (std::pair<double, std::vector<double>> p: magnetizations) {
+    this->dynamicMagnetization.emplace(p.first, p.second.at(0));
+  } 
 }
 
 bool ThiagoMagnet::isNeighbor(ThiagoMagnet * magnet){

@@ -9,6 +9,12 @@
 #include <fstream>
 #include <algorithm>
 #include <tgmath.h>
+#include <fmt/format.h>
+#include <map>
+#include <iomanip>
+
+#define FMTPRINT(x, y) fmt::print(" {} => {}\n", x, y);
+#define LOG(x) fmt::print(" {} \n", x);
 
 using namespace std;
 

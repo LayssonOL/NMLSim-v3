@@ -51,7 +51,7 @@ void ClockController::nextTimeStep(){
 	}
 }
 
-void ClockController::dynamicNextTimeStep(){
+void ClockController::dynamicNextTimeStep(double const& simStep){
 	//For every clock zone...
 	for(int i=0; i<this->zones.size(); i++){
 		vector<Magnet *> magnets = zones[i]->getAllMagnets();
@@ -61,7 +61,7 @@ void ClockController::dynamicNextTimeStep(){
 		}
 		//Update the values
 		for(int j=0; j<magnets.size(); j++){
-			magnets[j]->updateDynamicMagnetization();
+			magnets[j]->updateDynamicMagnetization(simStep);
 		}
 		// this->zones[i]->updateMagnets();
 		//Update the time in the phase
