@@ -1,7 +1,10 @@
 #include "LLGMagnet.h"
 #include <cstddef>
 #include <cstdio>
+#include <fmt/core.h>
 #include <iostream>
+#include <sstream>
+#include <string>
 #include <utility>
 #include <vector>
 #include <list>
@@ -88,14 +91,20 @@ LLGMagnet::LLGMagnet(string id, FileReader * fReader){
       }
 
       vector<string> magTime = splitString(mp, '#');
+      double mag = stod(magTime[0]);
+      double magDuration = stod(magTime[1]);
+      cout << "\nMagTime[0] " << mag << endl;
+      cout << "MagTime[1] " << magDuration << endl;
 
       // Calculate quantity of lines for dynamicMagnetization map
       // based on the magnetization duration and the simulation time step
       // {{{
-      double magDuration = stod(magTime[1]);
       std::list<double> timeSteps(magDuration);
 
       double total = (computedSimTime + magDuration);
+
+      if (total > simTime) { total = computedSimTime + (simTime - computedSimTime); } 
+
       for (double i = computedSimTime; i < total; i += timeStp) {
         timeSteps.push_back(i);
       }
@@ -103,11 +112,38 @@ LLGMagnet::LLGMagnet(string id, FileReader * fReader){
 
       std::vector<double> magnetizationVector{};
 
-      if (magTime[0] == "1") {
+      // Calculate all time step keys
+      std::vector<double> keys{};
+      std::vector<vector<double>> values{};
+      auto getRangeKeys = [&]() { 
+        for (auto p: this->dynamicMagnetization) {
+          keys.push_back(p.first);
+          values.push_back(p.second);
+        }
+      };
+
+      auto printKeys = [&]() {
+        getRangeKeys();
+        string str = "";
+        for (double d: keys) {
+          str += std::to_string(d) + ",";
+        }
+        cout << "Keys: " << str << "\n" << endl;
+      };
+
+      auto printDynMag = [&]() {
+        cout << "\n#################" << endl;
+        for (pair<double, vector<double>> p: this->dynamicMagnetization) {
+          cout << "Key: " << p.first << " X: " << p.second[0] << " Y: " << p.second[1] << " Z: " << p.second[2] << endl;
+        }
+        cout << "#################\n" << endl;
+      };
+
+      if (mag == 1) {
         // magnetization value to represent Boolean 1
         // component y with positive value near to 1
         magnetizationVector = {0.141, 0.99, 0};
-      } else if (magTime[0] == "-1") {
+      } else if (mag == -1) {
         // magnetization value to represent Boolean 0
         // component y with negative value
         magnetizationVector = {0.141, -0.99, 0};
@@ -116,9 +152,14 @@ LLGMagnet::LLGMagnet(string id, FileReader * fReader){
         magnetizationVector = {0.99, 0.141, 0};
       }
 
+      cout << "Steps: ";
       for (double step : timeSteps) {
+        cout << step << " ";
         this->dynamicMagnetization.emplace(step, magnetizationVector);
       }
+      cout << "\n" << endl;
+
+      // printDynMag();
       computedSimTime += magDuration;
     }
     // }}}
@@ -449,10 +490,10 @@ void LLGMagnet::updateMagnetization(){
 
 void LLGMagnet::updateDynamicMagnetization(double const& simStep) {
   if (this->fixedMagnetization && this->dynamicMagnetization.size() > size_t{0}) {
-    cout << "## Update Dynamic Magnetization - simStep: " << std::setprecision(7) << simStep << "\n" << endl;
-    cout << "## Update Dynamic Magnetization - dynamicMagnetization size: " << this->dynamicMagnetization.size() << "\n" << endl;
+    cout << "## Update Dynamic Magnetization - magnet ID: " << this->id << endl;
+    cout << "Update Dynamic Magnetization - simStep: " << std::setprecision(7) << simStep << endl;
     auto dynMag = this->dynamicMagnetization.find(simStep);
-    cout << "Captured !" << "\n" << endl;
+    cout << "Dyn Mag: " << dynMag->first << " - X: " << dynMag->second[0] << " Y: " << dynMag->second[1] << " Z: " << dynMag->second[2] << "\n" << endl;
     this->magnetization[0] = dynMag->second.at(0);
     this->magnetization[1] = dynMag->second.at(1);
     this->magnetization[2] = dynMag->second.at(2);

@@ -10,8 +10,11 @@
 #include <algorithm>
 #include <tgmath.h>
 #include <fmt/format.h>
+#include <fmt/ranges.h>
+#include <fmt/core.h>
 #include <map>
 #include <iomanip>
+#include <string>
 
 #define FMTPRINT(x, y) fmt::print(" {} => {}\n", x, y);
 #define LOG(x) fmt::print(" {} \n", x);
