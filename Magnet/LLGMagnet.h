@@ -15,12 +15,14 @@
 #define hbar 2.05457*pow(10,(-34)) //J.s/rad  -> h/2pi
 #define q 1.60217662*pow(10,(-19)) // carga do eletron C
 
+typedef std::map<double, vector<double>> dynMagMap;
+
 //Class for the LLG magnet engine
 class LLGMagnet : public Magnet{
 private:
 	string id;	//ID
 	double magnetization[3];	//Magnetization vector [M_x, M_y, M_z]
-	std::map<double, std::vector<double>> dynamicMagnetization;	//An array of Magnetization vectors [M_x, M_y, M_z] indexed by the period of time
+	dynMagMap dynamicMagnetization;	//An array of Magnetization vectors [M_x, M_y, M_z] indexed by the period of time
 	double initialMagnetization[3];	//Initial magnetization value
 	double newMagnetization[3];	//Temporary magnetization value (the magnetization in the next time step)
 	vector <Neighbor *> neighbors;	//List of neighbors
@@ -61,6 +63,10 @@ private:
 	void a_term(double* a, double* h_eff, double* i_s, double* m);
 	//Computes the b term of the magnetization
 	void b_term(double* b, double* m);
+  // Get dynamic magnetization keys
+  std::set<double> getDynMagKeys(); 
+  // Get dynamic magnetization values
+  std::vector<vector<double>> getDynMagValues();
 
 public:
 	//Constructor
@@ -74,7 +80,9 @@ public:
 	//Returns the magnetization
 	double * getMagnetization();
 	//Returns the dynamic magnetization
-  std::map<double, std::vector<double>> getDynamicMagnetization();
+  dynMagMap getDynamicMagnetization();
+  // Print dynamic magnetization map
+  void printDynamicMagnetization();
 	//Update the magnetization
 	void updateMagnetization();
 	//Update the dynamic magnetization
@@ -88,7 +96,7 @@ public:
 	//Set the magnetization to a predefined value
 	void setMagnetization(double * magnetization);
 	//Set the dynamic magnetization to a predefined value
-	void setDynamicMagnetization(std::map<double, std::vector<double>> const& magnetizations);
+	void setDynamicMagnetization(dynMagMap const& magnetizations);
 	//Reset the magnetization to its initial value
 	void resetMagnetization();
 	//Returns x coordinates

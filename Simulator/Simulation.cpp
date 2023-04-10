@@ -383,10 +383,8 @@ void Simulation::buildMagnets(){
 		}
 		break;
 		case LLG:{
-	    cout << " LLG...\n";
 			//Get all magnets items from XML file
 			vector<string> magnetsIds = fReader->getItems(DESIGN);
-	    cout << " getItems...\n";
 			//For each magnet
 			for(int i=0; i<magnetsIds.size(); i++){
 				//Build the new magnet
@@ -403,12 +401,10 @@ void Simulation::buildMagnets(){
 				}
 				//Get the clock zone and add it
 				string clkZoneStr = fReader->getItemProperty(DESIGN, magnetsIds[i], "clockZone");
-	      cout << " mag " << i << " clockZone => " << clkZoneStr << "...\n";
 				if(clkZoneStr != "none"){
 					this->circuit->addMagnetToZone(magnet, stoi(clkZoneStr));
 				}
 			}
-	    cout << " First for...\n";
 			//Only check for mimics after all magnets are instanciated
 			for(int i=0; i<magnetsIds.size(); i++){
 				//Check if there is a mimic and add it
@@ -418,7 +414,6 @@ void Simulation::buildMagnets(){
 					(static_cast<LLGMagnet *> (magnet))->setMimic(circuit->getMagnet(mimicId));
 				}
 			}
-	    cout << " Second for...\n";
 		}
 		break;
 	}

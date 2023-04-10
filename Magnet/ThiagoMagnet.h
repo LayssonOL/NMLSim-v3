@@ -36,7 +36,7 @@ public:
     //Returns the current magnetization
 	double * getMagnetization();
 	//Returns the dynamic magnetization
-  std::map<double, std::vector<double>> getDynamicMagnetization();
+  // std::map<double, double*> getDynamicMagnetization();
 	//Compute the future magnetization depending on the clock phase
 	void calculateMagnetization(ClockZone * zone);
 	//Compute the dynamic magnetization
@@ -54,7 +54,7 @@ public:
 	//Set the current magnetization to a determined value
 	void setMagnetization(double * magnetization);
 	//Set the dynamic magnetization to a predefined value
-	void setDynamicMagnetization(std::map<double, std::vector<double>> const& magnetizations);
+	// void setDynamicMagnetization(std::map<double, double*> const& magnetizations);
 	//Returns if another magnet is a neighboor
 	bool isNeighbor(ThiagoMagnet * magnet);
 	//Adds another magnet as a neighbor dependind on a neighborhood radius

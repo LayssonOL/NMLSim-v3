@@ -68,11 +68,15 @@ double * ThiagoMagnet::getMagnetization(){
 	return &this->magnetization;
 }
 
-std::map<double, std::vector<double>> ThiagoMagnet::getDynamicMagnetization(){
-  std::map<double, std::vector<double>> magnetizationOverTimeSteps{};
-  magnetizationOverTimeSteps.emplace(0, std::vector<double>{this->magnetization});
-  return magnetizationOverTimeSteps;
-}
+// std::map<double, double*> ThiagoMagnet::getDynamicMagnetization(){
+//   std::map<double, double*> magnetizationOverTimeSteps{};
+//   double arr[3];
+//   arr[0] = this->magnetization;
+//   arr[1] = 0;
+//   arr[2] = 0;
+//   magnetizationOverTimeSteps.emplace(make_pair(0.0, arr));
+//   return magnetizationOverTimeSteps;
+// }
 
 void ThiagoMagnet::calculateMagnetization(ClockZone * zone){
 	// The variable gaussian_value is the Gaussian-distributed random variable
@@ -149,11 +153,11 @@ void ThiagoMagnet::setMagnetization(double * magnetization){
 	this->tempMagnetization = this->magnetization = *magnetization;
 }
 
-void ThiagoMagnet::setDynamicMagnetization(std::map<double, std::vector<double>> const& magnetizations) {
-  for (std::pair<double, std::vector<double>> p: magnetizations) {
-    this->dynamicMagnetization.emplace(p.first, p.second.at(0));
-  } 
-}
+// void ThiagoMagnet::setDynamicMagnetization(std::map<double, double*> const& magnetizations) {
+//   for (auto p: magnetizations) {
+//     this->dynamicMagnetization.emplace(make_pair(p.first, p.second[0]));
+//   } 
+// }
 
 bool ThiagoMagnet::isNeighbor(ThiagoMagnet * magnet){
 	//This method considers the diference of edges from the two magnets

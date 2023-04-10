@@ -18,7 +18,7 @@ public:
 	//Returns the current magnetization value
 	virtual double * getMagnetization() = 0;
 	//Returns the current dynamic magnetization values
-	virtual std::map<double, std::vector<double>> getDynamicMagnetization() = 0;
+	// virtual std::map<double, double*> getDynamicMagnetization() = 0;
 	//Compute the magnetization for the next step of time
 	virtual void calculateMagnetization(ClockZone * zone) = 0;
 	//Compute the magnetization for the next step of time
@@ -38,7 +38,7 @@ public:
 	//Set the magnetization value
 	virtual void setMagnetization(double * magnetization) = 0;
 	//Set the dynamic magnetization to a predefined value
-	virtual void setDynamicMagnetization(std::map<double, std::vector<double>> const& magnetizations) = 0;
+	// virtual void setDynamicMagnetization(std::map<double, double*> const& magnetizations) = 0;
 	//Set the magnetization value to the original default
 	virtual void resetMagnetization() = 0;
 	//Return the list of neighbors
