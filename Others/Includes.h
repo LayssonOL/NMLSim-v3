@@ -12,7 +12,7 @@
 #include <unordered_map>
 #include <map>
 #include <string>
-#include <algorithm>
+#include <thread>
 #include <set>
 
 using namespace std;
@@ -33,7 +33,7 @@ enum simulationType{
 enum simulationExecution{
 	INVALIDSIMULATION,
 	DIRECT,
-	DYNAMIC,
+	PROGRAMMED,
 	EXAUSTIVE,
 	VERBOSE,
 	REPETITIVE

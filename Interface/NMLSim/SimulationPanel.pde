@@ -26,6 +26,7 @@ class SimulationPanel{
         mode.addOption("verbose");
         mode.addOption("exaustive");
         mode.addOption("repetitive");
+        mode.addOption("programmed");
         mode.setSelectedOption("verbose");
         
         method = new DropDownBox("Method", 0, 0, w-20);

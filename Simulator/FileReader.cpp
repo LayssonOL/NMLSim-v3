@@ -101,8 +101,8 @@ simulationExecution FileReader::getSimMode (){
 		return VERBOSE;
 	if(aux == "repetitive")
 		return REPETITIVE;
-	if(aux == "dynamic")
-		return DYNAMIC;
+	if(aux == "programmed")
+		return PROGRAMMED;
 	return INVALIDSIMULATION;
 }
 

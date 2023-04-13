@@ -22,7 +22,7 @@ class LLGMagnet : public Magnet{
 private:
 	string id;	//ID
 	double magnetization[3];	//Magnetization vector [M_x, M_y, M_z]
-	dynMagMap dynamicMagnetization;	//An array of Magnetization vectors [M_x, M_y, M_z] indexed by the period of time
+	dynMagMap programmedMagnetization;	//An array of Magnetization vectors [M_x, M_y, M_z] indexed by the period of time
 	double initialMagnetization[3];	//Initial magnetization value
 	double newMagnetization[3];	//Temporary magnetization value (the magnetization in the next time step)
 	vector <Neighbor *> neighbors;	//List of neighbors
@@ -63,30 +63,30 @@ private:
 	void a_term(double* a, double* h_eff, double* i_s, double* m);
 	//Computes the b term of the magnetization
 	void b_term(double* b, double* m);
-  // Get dynamic magnetization keys
-  std::set<double> getDynMagKeys(); 
-  // Get dynamic magnetization values
-  std::vector<vector<double>> getDynMagValues();
+  // Get programmed magnetization keys
+  std::set<double> getProgMagKeys(); 
+  // Get programmed magnetization values
+  std::vector<vector<double>> getProgMagValues();
 
 public:
 	//Constructor
 	LLGMagnet(string id, FileReader * fReader);
 	//Compute the magnetization
 	void calculateMagnetization(ClockZone * zone);
-	//Compute the dynamic magnetization
-	void calculateDynamicMagnetization(ClockZone * zone);
+	//Compute the programmed magnetization
+	void calculateProgrammedMagnetization(ClockZone * zone);
 	//Build the magnet from a description vector
 	void buildMagnet(vector <string> descParts);
 	//Returns the magnetization
 	double * getMagnetization();
-	//Returns the dynamic magnetization
-  dynMagMap getDynamicMagnetization();
-  // Print dynamic magnetization map
-  void printDynamicMagnetization();
+	//Returns the programmed magnetization
+  dynMagMap getProgrammedMagnetization();
+  // Print programmed magnetization map
+  void printProgrammedMagnetization();
 	//Update the magnetization
 	void updateMagnetization();
-	//Update the dynamic magnetization
-	void updateDynamicMagnetization(double const& simStep);
+	//Update the programmed magnetization
+	void updateProgrammedMagnetization(double const& simStep);
 	//Add a magnet as a neigbor based on a RADIUS (misspell the variable here)
 	void addNeighbor(Magnet * neighbor, double * ratio);
 	//Print in the output file
@@ -95,8 +95,8 @@ public:
 	string getId();
 	//Set the magnetization to a predefined value
 	void setMagnetization(double * magnetization);
-	//Set the dynamic magnetization to a predefined value
-	void setDynamicMagnetization(dynMagMap const& magnetizations);
+	//Set the programmed magnetization to a predefined value
+	void setProgrammedMagnetization(dynMagMap const& magnetizations);
 	//Reset the magnetization to its initial value
 	void resetMagnetization();
 	//Returns x coordinates

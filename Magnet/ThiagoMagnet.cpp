@@ -121,11 +121,11 @@ void ThiagoMagnet::calculateMagnetization(ClockZone * zone){
 	}
 }
 
-//Compute the dynamic magnetization for the next time step
-void ThiagoMagnet::calculateDynamicMagnetization(ClockZone * zone){
-  // If the magnet is an INPUT and has a vector of dynamic magnetization values
+//Compute the programmed magnetization for the next time step
+void ThiagoMagnet::calculateProgrammedMagnetization(ClockZone * zone){
+  // If the magnet is an INPUT and has a vector of programmed magnetization values
   // We don't need to calculate the new magnetization
-  if (this->fixedMagnetization && this->dynamicMagnetization.size() > 0) {
+  if (this->fixedMagnetization && this->programmedMagnetization.size() > 0) {
     return;     
   } 
   this->calculateMagnetization(zone);
@@ -136,7 +136,7 @@ void ThiagoMagnet::updateMagnetization(){
 		this->magnetization = this->tempMagnetization;
 }
 
-void ThiagoMagnet::updateDynamicMagnetization(double const& simStep = 0){
+void ThiagoMagnet::updateProgrammedMagnetization(double const& simStep = 0){
 	if(!this->fixedMagnetization)
 		this->magnetization = this->tempMagnetization;
 }
@@ -155,7 +155,7 @@ void ThiagoMagnet::setMagnetization(double * magnetization){
 
 // void ThiagoMagnet::setDynamicMagnetization(std::map<double, double*> const& magnetizations) {
 //   for (auto p: magnetizations) {
-//     this->dynamicMagnetization.emplace(make_pair(p.first, p.second[0]));
+//     this->programmedMagnetization.emplace(make_pair(p.first, p.second[0]));
 //   } 
 // }
 

@@ -73,9 +73,9 @@ void Simulation::verboseSimulation(double reportDeltaTime){
 	}
 }
 
-void Simulation::dynamicSimulation(double reportDeltaTime){
+void Simulation::programmedSimulation(double reportDeltaTime){
 	double auxTimer = 0.0;
-	cout << "Starting dynamic simulation...\n";
+	cout << "Starting programmed simulation...\n";
 	outFile << "Time,";
 	
 	//Write the output file header
@@ -91,7 +91,7 @@ void Simulation::dynamicSimulation(double reportDeltaTime){
 		//Update auxiliar timer, which is used to check the report time step
 		auxTimer += this->deltaTime;
 		//Simulate next time step
-		this->circuit->dynamicNextTimeStep(currentTime);
+		this->circuit->programmedNextTimeStep(currentTime);
 		//Update timer
 		this->currentTime += this->deltaTime;
 		//Dump values in case the report step is reached
@@ -199,10 +199,11 @@ void Simulation::simulate(){
 		case REPETITIVE:{
 			repetitiveSimulation();
 		}
-		case DYNAMIC:{
-			dynamicSimulation(stod(fReader->getProperty(CIRCUIT, "reportStep")));
+		case PROGRAMMED:{
+			programmedSimulation(stod(fReader->getProperty(CIRCUIT, "reportStep")));
 		}
-		break;
+    default:
+		  break;
 	}
 	this->outFile.close();
 }

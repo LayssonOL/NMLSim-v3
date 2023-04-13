@@ -74,18 +74,18 @@ LLGMagnet::LLGMagnet(string id, FileReader * fReader){
 		this->initialMagnetization[i] = this->magnetization[i];
 	}
 
-	//Dynamic magnetization initialization
+	//Programmed magnetization initialization
   //{{{
-	vector<string> dynamicMagParts{};
-	dynamicMagParts = splitString(fReader->getItemProperty(DESIGN, id, "dynamicMagnetization"), ',');
-  if (dynamicMagParts.size() > 1) {
+	vector<string> programmedMagParts{};
+	programmedMagParts = splitString(fReader->getItemProperty(DESIGN, id, "programmedMagnetization"), ',');
+  if (programmedMagParts.size() > 1) {
     double simTime = stod(fReader->getProperty(CIRCUIT, "simTime"));
     double timeStp = stod(fReader->getProperty(CIRCUIT, "timeStep"));
     double auxTimer = 0;
     double computedSimTime = 0;
     vector<double> magnetizationVector{};
 
-    for(string mp: dynamicMagParts) {
+    for(string mp: programmedMagParts) {
       if (computedSimTime > simTime) {
         std::cout << "Comptued Sim Time bigger than or equal to Original Sim Time" << std::endl;
         break; 
@@ -110,10 +110,10 @@ LLGMagnet::LLGMagnet(string id, FileReader * fReader){
         magnetizationVector = {0.99, 0.141, 0};
       }
 
-      // Calculate quantity of lines for dynamicMagnetization map
+      // Calculate quantity of lines for programmedMagnetization map
       // based on the magnetization duration and the simulation time step
       // {{{
-      // std::set<double> dynMagKeys = this->getDynMagKeys();
+      // std::set<double> dynMagKeys = this->getProgMagKeys();
 
       // Calculate the next computed sim time and total
       double total = (computedSimTime + magDuration);
@@ -121,45 +121,45 @@ LLGMagnet::LLGMagnet(string id, FileReader * fReader){
 
       // for (double i = computedSimTime; i < total; i += timeStp) {
       //   // if (std::find(dynMagKeys.begin(), dynMagKeys.end(), i) != dynMagKeys.end()) { continue; }
-      //   // if (this->dynamicMagnetization.count(i) != 0) { 
+      //   // if (this->programmedMagnetization.count(i) != 0) { 
       //   //   cout << "Já contém " << i << endl;
       //   //   continue; 
       //   // }
-      //   // this->dynamicMagnetization.emplace(i, magnetizationVector);
-      //   // this->dynamicMagnetization[i] = magnetizationVector;
-      //   // pair<dynMagMap::iterator, bool> result = this->dynamicMagnetization.insert(make_pair(i, magnetizationVector));
+      //   // this->programmedMagnetization.emplace(i, magnetizationVector);
+      //   // this->programmedMagnetization[i] = magnetizationVector;
+      //   // pair<dynMagMap::iterator, bool> result = this->programmedMagnetization.insert(make_pair(i, magnetizationVector));
       //   // cout << "Result first " << result.first->first << " - second " << result.second << endl;
-      //   this->dynamicMagnetization.insert(make_pair(i, magnetizationVector));
+      //   this->programmedMagnetization.insert(make_pair(i, magnetizationVector));
       // }
       // if (total == simTime) {
         // cout << "total == simTime" << endl;
-        // pair<dynMagMap::iterator, bool> result = this->dynamicMagnetization.insert(make_pair(simTime, magnetizationVector));
+        // pair<dynMagMap::iterator, bool> result = this->programmedMagnetization.insert(make_pair(simTime, magnetizationVector));
         // cout << "Result first " << result.first->first << " - second " << result.second << endl;
-        // this->dynamicMagnetization[simTime] = magnetizationVector;
-        this->dynamicMagnetization.insert(make_pair(total, magnetizationVector));
+        // this->programmedMagnetization[simTime] = magnetizationVector;
+        this->programmedMagnetization.insert(make_pair(total, magnetizationVector));
       // }
       // }}}
 
       computedSimTime += magDuration;
     }
     if (computedSimTime < simTime) {
-      this->dynamicMagnetization.insert(make_pair(simTime, magnetizationVector));
+      this->programmedMagnetization.insert(make_pair(simTime, magnetizationVector));
     }
 
-    // for (auto p: this->dynamicMagnetization) {
+    // for (auto p: this->programmedMagnetization) {
     //   cout << "Registered key: " << p.first << endl;
     //   auto vec = p.second;
     //   cout << "Key: " << p.first << " X: " << vec[0] << " Y: " << vec[1] << " Z: " << vec[2] << endl;
     // }
     // dynMagMap::iterator it;
-    // for (it = this->dynamicMagnetization.begin(); it != this->dynamicMagnetization; i++) {
-    //   if (this->dynamicMagnetization.find())
+    // for (it = this->programmedMagnetization.begin(); it != this->programmedMagnetization; i++) {
+    //   if (this->programmedMagnetization.find())
     // }
-    for (auto p: this->dynamicMagnetization) {
+    for (auto p: this->programmedMagnetization) {
       cout << "Key: " << p.first << " X: " << p.second[0] << " Y: " << p.second[1] << " Z: " << p.second[2] << endl;
     }
   }
-  // this->printDynamicMagnetization();
+  // this->printProgammedMagnetization();
   // throw std::exception();
 
 	//Fixed magnetization
@@ -374,11 +374,11 @@ void LLGMagnet::calculateMagnetization(ClockZone * zone){
 	free(signal);
 }
 
-//Compute the dynamic magnetization for the next time step
-void LLGMagnet::calculateDynamicMagnetization(ClockZone * zone){
-  // If the magnet is an INPUT and has a vector of dynamic magnetization values
+//Compute the programmed magnetization for the next time step
+void LLGMagnet::calculateProgrammedMagnetization(ClockZone * zone){
+  // If the magnet is an INPUT and has a vector of programmed magnetization values
   // We don't need to calculate the new magnetization
-  if (this->fixedMagnetization && this->dynamicMagnetization.size() > 0) {
+  if (this->fixedMagnetization && this->programmedMagnetization.size() > 0) {
     return; 
   } 
   this->calculateMagnetization(zone);
@@ -448,8 +448,8 @@ double * LLGMagnet::getMagnetization(){
 	return this->magnetization;
 }
 
-dynMagMap LLGMagnet::getDynamicMagnetization(){
-	return this->dynamicMagnetization;
+dynMagMap LLGMagnet::getProgrammedMagnetization(){
+	return this->programmedMagnetization;
 }
 
 void LLGMagnet::setMimic(Magnet * mimic){
@@ -474,20 +474,20 @@ void LLGMagnet::updateMagnetization(){
 	this->magnetization[2] = this->newMagnetization[2]/module;
 }
 
-void LLGMagnet::updateDynamicMagnetization(double const& simStep) {
-  if (this->fixedMagnetization && this->dynamicMagnetization.size() > size_t{0}) {
-    // cout << "## Update Dynamic Magnetization - magnet ID: " << this->id << endl;
-    cout << "## Update Dynamic Magnetization - simStep: " << simStep << endl;
+void LLGMagnet::updateProgrammedMagnetization(double const& simStep) {
+  if (this->fixedMagnetization && this->programmedMagnetization.size() > size_t{0}) {
+    // cout << "## Update Programmed Magnetization - magnet ID: " << this->id << endl;
+    cout << "## Update Programmed Magnetization - simStep: " << simStep << endl;
     vector<double> dynMag{};
-    for (auto p: this->dynamicMagnetization) {
+    for (auto p: this->programmedMagnetization) {
       if (simStep <= p.first) { 
         dynMag = p.second; 
         break;
       }
       else { continue; }
     }
-    // cout << "Dyn Mag" << " - X: " << dynMag[0] << " Y: " << dynMag[1] << " Z: " << dynMag[2] << "\n" << endl;
-    // cout << "Dyn Mag: " << dynMag->first << " - X: " << dynMag->second.at(0) << " Y: " << dynMag->second.at(1) << " Z: " << dynMag->second.at(2) << "\n" << endl;
+    // cout << "Prog Mag" << " - X: " << dynMag[0] << " Y: " << dynMag[1] << " Z: " << dynMag[2] << "\n" << endl;
+    // cout << "Prog Mag: " << dynMag->first << " - X: " << dynMag->second.at(0) << " Y: " << dynMag->second.at(1) << " Z: " << dynMag->second.at(2) << "\n" << endl;
     
     this->magnetization[0] = dynMag[0];
     this->magnetization[1] = dynMag[1];
@@ -530,9 +530,9 @@ void LLGMagnet::setMagnetization(double * magnetization){
 	this->magnetization[2] = magnetization[2];
 }
 
-void LLGMagnet::setDynamicMagnetization(dynMagMap const& magnetizations) {
+void LLGMagnet::setProgrammedMagnetization(dynMagMap const& magnetizations) {
   for (auto p: magnetizations) {
-    this->dynamicMagnetization.insert(make_pair(p.first, p.second));
+    this->programmedMagnetization.insert(make_pair(p.first, p.second));
   } 
 }
 
@@ -586,32 +586,32 @@ vector <Neighbor *> LLGMagnet::getNeighbors(){
 	return this->neighbors;
 }
 
-set<double> LLGMagnet::getDynMagKeys() {
+set<double> LLGMagnet::getProgMagKeys() {
   std::set<double> keys{};
-  for (auto p: this->dynamicMagnetization) {
+  for (auto p: this->programmedMagnetization) {
     keys.insert(p.first);
   }
 
   return keys;
 }
 
-vector<vector<double>> LLGMagnet::getDynMagValues() {
+vector<vector<double>> LLGMagnet::getProgMagValues() {
   std::vector<vector<double>> values{};
-  for (auto p: this->dynamicMagnetization) {
+  for (auto p: this->programmedMagnetization) {
     values.push_back(p.second);
   }
 
   return values;
 }
 
-void LLGMagnet::printDynamicMagnetization() {
+void LLGMagnet::printProgrammedMagnetization() {
   // Calculate all time step keys
-  std::set<double> keys = this->getDynMagKeys();
-  std::vector<vector<double>> values = this->getDynMagValues();
+  std::set<double> keys = this->getProgMagKeys();
+  std::vector<vector<double>> values = this->getProgMagValues();
 
   cout << "\n#################" << endl;
-  cout << "Size: " << this->dynamicMagnetization.size() << endl;
-  for (auto p: this->dynamicMagnetization) {
+  cout << "Size: " << this->programmedMagnetization.size() << endl;
+  for (auto p: this->programmedMagnetization) {
     // if (p.first == "3" || p.first == "5" || p.first == "9") {
       cout << "Key: " << p.first << " X: " << p.second[0] << " Y: " << p.second[1] << " Z: " << p.second[2] << endl;
     // }
