@@ -8,7 +8,7 @@
 	<!-- Be mindfull that the RK4 method disconsiders the temperature -->
 	<property method="RK4"/>
 	<!-- There are 4 simulationMode: exaustive, direct, repetitive and verbose -->
-	<property simulationMode="dynamic"/>
+	<property simulationMode="programmed"/>
 	<!-- The number of simulations to be done in the repetitive mode -->
 	<property repetitions="100"/>
 	<!-- The report time step. Starting at time 0, the program reports at each reportStep. Only used in verbose mode -->
@@ -134,7 +134,7 @@
 		<property position="2970.0,1950.0"/>
 		<property clockZone="0"/>
 		<property magnetization="0.141,0.99,0"/>
-		<property dynamicMagnetization="1#20, -1#20, 1#20, -1#20"/>
+		<property programmedMagnetization="1#20, -1#20, 1#20, -1#20"/>
 	</item>
 	<item name="Magnet_57_0">
 		<property component="component_0"/>

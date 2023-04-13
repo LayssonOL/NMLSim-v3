@@ -290,7 +290,7 @@
 		<property position="2690.0,1950.0"/>
 		<property clockZone="0"/>
 		<property magnetization="0.141,0.99,0"/>
-		<property dynamicMagnetization="-1#40, -1#20, 1#20, 1#40"/>
+		<property programmedMagnetization="-1#40, -1#20, 1#20, 1#40"/>
 	</item>
 	<item name="Magnet_137_1">
 		<property component="component_4"/>
@@ -299,7 +299,7 @@
 		<property position="2690.0,1610.0"/>
 		<property clockZone="0"/>
 		<property magnetization="0.141,0.99,0"/>
-		<property dynamicMagnetization="-1#40, 1#20, -1#20, 1#40"/>
+		<property programmedMagnetization="-1#40, 1#20, -1#20, 1#40"/>
 	</item>
 	<item name="Magnet_137_2">
 		<property component="component_4"/>
@@ -308,7 +308,7 @@
 		<property position="4580.0,1950.0"/>
 		<property clockZone="0"/>
 		<property magnetization="0.141,0.99,0"/>
-		<property dynamicMagnetization="-1#40, -1#20, 1#20, 1#40"/>
+		<property programmedMagnetization="-1#40, -1#20, 1#20, 1#40"/>
 	</item>
 	<item name="Magnet_137_3">
 		<property component="component_4"/>
@@ -317,7 +317,7 @@
 		<property position="4580.0,1610.0"/>
 		<property clockZone="0"/>
 		<property magnetization="0.141,0.99,0"/>
-		<property dynamicMagnetization="-1#40, 1#20, -1#20, 1#40"/>
+		<property programmedMagnetization="-1#40, 1#20, -1#20, 1#40"/>
 	</item>
 	<item name="Magnet_139_0">
 		<property component="component_3"/>
