@@ -49,7 +49,7 @@ class MagnetPanel{
         
         magBottomCut = new TextBox("Bottom Cut (nm)", x, y, w-20);
         magBottomCut.setValidationType("Float");
-        magBottomCut.setText("0");        
+        magBottomCut.setText("0"); 
         
         type = new DropDownBox("Magnet Type", x, y, w-20);
         type.addOption("input");

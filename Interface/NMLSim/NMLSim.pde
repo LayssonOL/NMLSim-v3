@@ -38,7 +38,7 @@ void setup(){
     //sb = new SimulationBar(0, 690, 1280, 30, sg, pm);
     //h.setSimulationBar(sb);
     
-    if(displayWidth > 2560){
+    if(displayWidth > 2560) {
       screenHeight = 1080;
       screenWidth = 1920;
       surface.setSize(screenWidth, screenHeight);

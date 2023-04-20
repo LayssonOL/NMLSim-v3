@@ -2,6 +2,7 @@ class PanelMenu{
     float x, y, panelW, panelH;
     SimulationPanel simPanel;
     PhasePanel phasePanel;
+    DynMagPanel dynMagPanel;
     ZonePanel zonePanel;
     MagnetPanel magnetPanel;
     StructurePanel structurePanel;
@@ -42,6 +43,10 @@ class PanelMenu{
         auxW = textWidth("Magnet");
         hitboxes.add(new HitBox(auxX, y, auxW, h));
         auxX += auxW+10;
+        labels.add("Dyn. Mag.");
+        auxW = textWidth("Dyn. Mag.");
+        hitboxes.add(new HitBox(auxX, y, auxW, h));
+        auxX += auxW+10;
         labels.add("Results");
         auxW = textWidth("Results");
         hitboxes.add(new HitBox(auxX, y, auxW, h));
@@ -60,6 +65,7 @@ class PanelMenu{
         structurePanel.setSubstrateGrid(substrateGrid);
         simPanel = new SimulationPanel(x, y-ph, pw, ph);
         phasePanel = new PhasePanel(x, y-ph, pw, ph, simPanel);
+        dynMagPanel = new DynMagPanel(x, y-ph, pw, ph, simPanel);
         zonePanel = new ZonePanel(x, y-ph, pw, ph, phasePanel);
         phasePanel.setZonePanel(zonePanel);
         simPanel.setZonePanel(zonePanel);
@@ -189,6 +195,9 @@ class PanelMenu{
                 magnetPanel.drawSelf();
             break;
             case 4:
+                dynMagPanel.drawSelf();
+            break;
+            case 5:
                 resultsPanel.drawSelf();
             break;
             default:{}
@@ -243,6 +252,9 @@ class PanelMenu{
                 magnetPanel.mousePressedMethod();
             break;
             case 4:
+                dynMagPanel.mousePressedMethod();
+            break;
+            case 5:
                 resultsPanel.mousePressedMethod();
             default:{}
         }
@@ -290,6 +302,9 @@ class PanelMenu{
                 magnetPanel.keyPressedMethod();
             break;
             case 4:
+                dynMagPanel.keyPressedMethod();
+            break;
+            case 5:
                 resultsPanel.keyPressedMethod();
             break;
             default:{}
