@@ -22,8 +22,8 @@ boolean ctrlPressed = false, altPressed = false, shiftPressed = false;
 void setup(){
     size(1280, 720);
     
-    print("\nDisplay width: " + displayWidth);
-    print("\nDisplay height: " + displayHeight);
+    // print("\nDisplay width: " + displayWidth);
+    // print("\nDisplay height: " + displayHeight);
     
     sprites = new SpriteCenter();
     //surface.setSize(1280, 720);

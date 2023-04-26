@@ -192,6 +192,7 @@ class ListContainer{
             if(index < edit.size()){
                 edit.get(index).deactivate();
                 editionField = items.get(index);
+                print("\n## List Container - Edit enabled: ", editionField);
                 return true;
             } else{
                 editionField = "";
@@ -234,5 +235,12 @@ class ListContainer{
     
     void mouseWheelMethod(float value){
         scroll.mouseWheelMethod(value);
+    }
+
+    void printList() {
+      for(int i=0; i<items.size(); i++) {
+        print("\n ###############");
+        print("\n## Item ", i, " = ", items.get(i));
+      }
     }
 }
