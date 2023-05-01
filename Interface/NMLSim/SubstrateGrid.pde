@@ -622,7 +622,7 @@ class Magnet{
         this.zoneViewMode = viewMode;
         this.groupName = "";
         this.name = name;
-        this.pprogMagnetizations = new ArrayList<String>();
+        this.progMagnetizations = new ArrayList<String>();
         String parts[] = magStr.split(";");
         if(parts.length > 12){
             this.mimic = parts[12];
@@ -645,9 +645,8 @@ class Magnet{
         y = Float.parseFloat(aux[1]);
         clockZone = Integer.parseInt(parts[10]);
         hitbox = new HitBox(0,0,0,0);
-        progMagnetizations = new HashMap<Integer, Integer>();
-        if (parts.size() >= 12) {
-          String progMags[] = parts[11].ssplit(","); 
+        if (parts.length >= 12) {
+          String progMags[] = parts[11].split(","); 
           for (String pair: progMags) {
             // String magDurationPair = pair.split("#");
             // Storing paris of Time duration by magnetization value as key and value, respectively

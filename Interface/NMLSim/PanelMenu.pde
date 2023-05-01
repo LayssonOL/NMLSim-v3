@@ -119,7 +119,7 @@ class PanelMenu{
     void enableEditing(){
         magnetPanel.isEditing = true;
         magnetPanel.setEditing(substrateGrid.getSelectedStructure(), substrateGrid.getSelectedMagnetsNames());
-        dynmagPanel.setEditing(substrateGrid.getSelectedStructure(), substrateGrid.getSelectedMagnetsNames());
+        dynMagPanel.setEditing(substrateGrid.getSelectedStructure(), substrateGrid.getSelectedMagnetsNames());
         selectedPanel = 3;
     }
         

@@ -1,7 +1,7 @@
 class DynMagPanel{
     float x, y, w, h;
     TextBox name, duration, currentMagnetization;
-    Button saveButton, newButton, clearButton;
+    Button saveButton, newButton, clearButton, cancelButton;
     color panelColor, textColor;
     SimulationPanel sp;
     SubstrateGrid substrateGrid;
@@ -9,7 +9,7 @@ class DynMagPanel{
     HashMap<String, String> dynMagValues;
     Chart preview;
     boolean isEditing;
-    String editingStruture;
+    String editingStructure;
 
     DynMagPanel(float x, float y, float w, float h, SimulationPanel sp){
         this.x = x;
@@ -164,7 +164,7 @@ class DynMagPanel{
         //type;clockZone;magnetization;fixed;w;h;tc;bc;position;zoneColor
         editingStructure = structure;
         String fields[] = structure.split(";");
-        name.setText(name);
+        this.name.setText(name);
     }
     
     void reset(){
@@ -255,16 +255,16 @@ class DynMagPanel{
             saveButton.deactivate();
             //type;clockZone;magnetization;fixed;w;h;tc;bc;position;zoneColor
             String parts[] = editingStructure.split(";");
-            editingStructure = label.getText() + ";";
-            if(zonePanel.getEngine().equals("LLG")){
-                parts[2] = llgInitMag.getText();
-            } else{
-                parts[2] = behaInitMag.getText();
-            }
-            parts[3] = (fixedMag.isChecked)?"true":"false";
+            editingStructure = name.getText() + ";";
+            // if(zonePanel.getEngine().equals("LLG")){
+            //     parts[2] = llgInitMag.getText();
+            // } else{
+            //     parts[2] = behaInitMag.getText();
+            // }
+            // parts[3] = (fixedMag.isChecked)?"true":"false";
             for(int i=0; i<parts.length; i++)
                 editingStructure += parts[i] + ";";
-            substrateGrid.editSelectedMagnets(editingStructure, oldName);
+            substrateGrid.editSelectedMagnets(editingStructure, this.name.getText());
             substrateGrid.isEditingMagnet = false;
             isEditing = false;
             

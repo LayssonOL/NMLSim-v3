@@ -256,7 +256,7 @@ public class FileHandler{
                                "\t\t<property myType=\"" + parts[1] + "\"/>\n\t\t<property fixedMagnetization=\"" + parts[4] + "\"/>\n" +
                                "\t\t<property position=\"" + parts[10] + "\"/>\n\t\t<property clockZone=\"" + zoneIndex.get(parts[2]) + "\"/>\n" +
                                "\t\t<property magnetization=\"" + parts[3] + "\"/>\n" + 
-                               ((parts[4] == "true" && parts.size() >= 14) ? ("\t\t<property programmedMagnetization=\"" + parts[13] + "\"/>\n") : ("")) +
+                               ((parts[4] == "true" && parts.length >= 14) ? ("\t\t<property programmedMagnetization=\"" + parts[13] + "\"/>\n") : ("")) +
                                ((parts.length > 12)?("\t\t<property mimic=\"" + parts[12] + "\"/>\n"):("")) + "\t</item>");
         }
         xmlFileOut.println("</design>");
