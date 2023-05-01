@@ -610,20 +610,22 @@ class SubstrateGrid{
 class Magnet{
     float w, h, bottomCut, topCut, xMag, yMag, x, y;
     String magStr, name, groupName, zone, mimic = "";
+    ArrayList<String> progMagnetizations;
     color clockZone;
     boolean isTransparent = false, isSelected = false, zoneViewMode = true;
     HitBox hitbox;
     
-    /*MagStr = type;clockZone;magnetization;fixed;w;h;tk;tc;bc;position;zoneColor;mimic*/
+    /*MagStr = type;clockZone;magnetization;fixed;w;h;tk;tc;bc;position;zoneColor;progMagnetization;mimic*/
     
     Magnet(String magStr, String name, boolean viewMode){
         this.magStr = magStr;
         this.zoneViewMode = viewMode;
         this.groupName = "";
         this.name = name;
+        this.pprogMagnetizations = new ArrayList<String>();
         String parts[] = magStr.split(";");
-        if(parts.length > 11){
-            this.mimic = parts[11];
+        if(parts.length > 12){
+            this.mimic = parts[12];
         }
         if(parts[2].contains(",")){
             String [] aux = parts[2].split(",");
@@ -643,6 +645,15 @@ class Magnet{
         y = Float.parseFloat(aux[1]);
         clockZone = Integer.parseInt(parts[10]);
         hitbox = new HitBox(0,0,0,0);
+        progMagnetizations = new HashMap<Integer, Integer>();
+        if (parts.size() >= 12) {
+          String progMags[] = parts[11].ssplit(","); 
+          for (String pair: progMags) {
+            // String magDurationPair = pair.split("#");
+            // Storing paris of Time duration by magnetization value as key and value, respectively
+            progMagnetizations.add(pair);
+          }
+        }
     }
     
     void editStructure(String newStructure){
@@ -699,14 +710,14 @@ class Magnet{
     void addMimic(String mimicId){
         this.mimic = mimicId;
         String [] parts = magStr.split(";");
-        if(parts.length > 11){
-            parts[11] = mimic;
+        if(parts.length > 12){
+            parts[12] = mimic;
         }
         magStr = "";
         for(int i=0; i<parts.length; i++){
             magStr += parts[i] + ";";
         }
-        if(parts.length <= 11){
+        if(parts.length <= 12){
             magStr += mimic + ";";
         }
     }
@@ -714,8 +725,8 @@ class Magnet{
     void removeMimic(){
         this.mimic = "";
         String [] parts = magStr.split(";");
-        if(parts.length > 11){
-            parts[11] = "";
+        if(parts.length > 12){
+            parts[12] = "";
         }
         magStr = "";
         for(int i=0; i<parts.length; i++){
@@ -742,6 +753,14 @@ class Magnet{
     void setMagnetization(float xMag, float yMag){
         this.xMag = xMag;
         this.yMag = yMag;
+    }
+
+    void setProgrammedMagnetization(ArrayList<String> progMags) {
+      this.progMagnetizations = progMags;
+    }
+
+    void addProgMag(Integer magVal, Integer duration) {
+      this.progMagnetizations.add(magVal + "#" + duration);
     }
     
     void setMagnetizationInStructure(float xMag, float yMag){

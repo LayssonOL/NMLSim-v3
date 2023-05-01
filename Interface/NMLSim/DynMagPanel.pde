@@ -4,9 +4,12 @@ class DynMagPanel{
     Button saveButton, newButton, clearButton;
     color panelColor, textColor;
     SimulationPanel sp;
+    SubstrateGrid substrateGrid;
     ListContainer dynMagPairs;
     HashMap<String, String> dynMagValues;
     Chart preview;
+    boolean isEditing;
+    String editingStruture;
 
     DynMagPanel(float x, float y, float w, float h, SimulationPanel sp){
         this.x = x;
@@ -17,6 +20,7 @@ class DynMagPanel{
         textSize(fontSz);
         panelColor = color(45, 80, 22);
         textColor = color(255,255,255);
+        isEditing = false;
         
         dynMagValues = new HashMap<String, String>();
         
@@ -30,6 +34,7 @@ class DynMagPanel{
         duration.setValidationType("Integer");
         
         saveButton = new Button("Save", "Saves the changes made on the magnetization", sprites.smallSaveIconWhite, 0, 0);
+        cancelButton = new Button("Cancel", "Cancel the changes made in the current magnetization", sprites.cancelIconWhite, x+w-80, y+h-30);
         newButton = new Button("New", "Adds the configuration as a new magnetization", sprites.smallNewIconWhite, 0, 0);        
         clearButton = new Button("Clear", "Clear ALL texts in the boxes", sprites.smallDeleteIconWhite, 0, 0);
         
@@ -62,6 +67,7 @@ class DynMagPanel{
         duration.updatePosition(x+10,auxY);
         auxY += aux+5;
         
+
         if(name.validateText()){
             if(sp.getEngine().equals("LLG") && dynMagPairs.isIn(name.getText())){
                 saveButton.isTransparent = (!validateAllFields());
@@ -83,6 +89,17 @@ class DynMagPanel{
             newButton.isValid = true;
             saveButton.isValid = false;
         }
+
+        if(isEditing){
+            saveButton.isTransparent = !(name.validateText() && currentMagnetization.validateText() && duration.validateText());
+            saveButton.drawSelf();
+            cancelButton.drawSelf();
+        }
+        if(!isEditing){
+            newButton.isTransparent = !validateAllFields();
+            newButton.drawSelf();
+        }
+
         clearButton.setPosition(x+w-60,auxY);
         clearButton.drawSelf();
         clearButton.isValid = true;
@@ -133,6 +150,22 @@ class DynMagPanel{
         preview.drawSelf();
         onMouseOverMethod();
     }
+
+    void setSubstrateGrid(SubstrateGrid sg){
+        substrateGrid = sg;
+    }
+
+    void setEditing(String structure, String name){
+        if(structure.contains(":") || structure.equals("")){
+            isEditing = false;
+            substrateGrid.isEditingMagnet = false;
+            return;
+        }
+        //type;clockZone;magnetization;fixed;w;h;tc;bc;position;zoneColor
+        editingStructure = structure;
+        String fields[] = structure.split(";");
+        name.setText(name);
+    }
     
     void reset(){
         name.setText("");
@@ -151,6 +184,11 @@ class DynMagPanel{
     }
     
     void onMouseOverMethod(){
+
+        if(isEditing){
+            saveButton.onMouseOverMethod();
+            cancelButton.onMouseOverMethod();
+        }
         saveButton.onMouseOverMethod();
         newButton.onMouseOverMethod();
         clearButton.onMouseOverMethod();
@@ -206,6 +244,34 @@ class DynMagPanel{
             pop.setAsTimer(50);
             popCenter.setPopUp(pop);
             return true;
+        }
+        if(isEditing && cancelButton.mousePressedMethod()){
+            cancelButton.deactivate();
+            isEditing = false;
+            substrateGrid.unselectMagnets();
+            substrateGrid.isEditingMagnet = false;
+        }
+        if(isEditing && saveButton.mousePressedMethod()){
+            saveButton.deactivate();
+            //type;clockZone;magnetization;fixed;w;h;tc;bc;position;zoneColor
+            String parts[] = editingStructure.split(";");
+            editingStructure = label.getText() + ";";
+            if(zonePanel.getEngine().equals("LLG")){
+                parts[2] = llgInitMag.getText();
+            } else{
+                parts[2] = behaInitMag.getText();
+            }
+            parts[3] = (fixedMag.isChecked)?"true":"false";
+            for(int i=0; i<parts.length; i++)
+                editingStructure += parts[i] + ";";
+            substrateGrid.editSelectedMagnets(editingStructure, oldName);
+            substrateGrid.isEditingMagnet = false;
+            isEditing = false;
+            
+            PopUp pop = new PopUp((width-250)/2, (height-50)/2, 250, 50, "Magnet modifications saved!");
+            pop.activate();
+            pop.setAsTimer(60);
+            popCenter.setPopUp(pop);
         }
         hit = hit | name.mousePressedMethod();
         hit = hit | currentMagnetization.mousePressedMethod();

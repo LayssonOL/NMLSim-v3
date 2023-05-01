@@ -15,6 +15,7 @@ class PanelMenu{
     HitBox structureLabelHitbox;
     SubstrateGrid substrateGrid;
     String subProperty = "";
+    boolean projectLoaded;
     
     PanelMenu(float x, float y, float pw, float ph, SubstrateGrid sg){
         this.x = x;
@@ -78,6 +79,9 @@ class PanelMenu{
         
         structureLabelHitbox = new HitBox(width/scaleFactor-textWidth("Structures")-33, y, textWidth("Structures")+10, textAscent()+textDescent());
     }
+
+    void setProjectLoaded(boolean isLoaded) { projectLoaded = isLoaded; }
+    boolean getProjectLoaded() { return projectLoaded; }
     
     void loadStructures(ArrayList<String> structures){
         structurePanel.loadStructures(structures);
@@ -115,6 +119,7 @@ class PanelMenu{
     void enableEditing(){
         magnetPanel.isEditing = true;
         magnetPanel.setEditing(substrateGrid.getSelectedStructure(), substrateGrid.getSelectedMagnetsNames());
+        dynmagPanel.setEditing(substrateGrid.getSelectedStructure(), substrateGrid.getSelectedMagnetsNames());
         selectedPanel = 3;
     }
         
@@ -195,6 +200,7 @@ class PanelMenu{
                 magnetPanel.drawSelf();
             break;
             case 4:
+              if (projectLoaded)
                 dynMagPanel.drawSelf();
             break;
             case 5:

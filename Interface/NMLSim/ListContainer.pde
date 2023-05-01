@@ -36,7 +36,7 @@ class ListContainer{
         return items.contains(element);
     }
     
-    boolean hasExtraItems(ArrayList <String> options){
+    boolean hasExtraItems(ArrayList <String> options) {
         for(int i=0; i<items.size(); i++)
             if(!options.contains(items.get(i)))
                 return true;
@@ -185,14 +185,17 @@ class ListContainer{
             }
         }
         if(editEnabled){
+            print("\n## List Container - Edit enabled: ", editEnabled);
             for(index=0; index<edit.size(); index++){
-                if(edit.get(index).mousePressedMethod())
-                    break;
+                if(edit.get(index).mousePressedMethod()) {
+                  print("\n## Edit index: ", index);
+                  break;
+                }
             }
             if(index < edit.size()){
+                print("\n## Index < Edit.size()");
                 edit.get(index).deactivate();
                 editionField = items.get(index);
-                print("\n## List Container - Edit enabled: ", editionField);
                 return true;
             } else{
                 editionField = "";

@@ -190,6 +190,7 @@ void openProject(File selectedPath){
     fileSys.setBaseName(fileBaseName);
     fileSys.readStructureFile();
     fileSys.readConfigFile();
+    pm.setProjectLoaded(fileSys.getProjectIsLoaded());
     ctrlPressed = altPressed = shiftPressed = false;
 }
 

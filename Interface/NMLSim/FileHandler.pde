@@ -5,6 +5,7 @@ public class FileHandler{
     SubstrateGrid substrateGrid;
     PrintWriter xmlFileOut, configFileOut, structureFileOut;
     BufferedReader configFileIn, structureFileIn;
+    boolean projectLoaded;
     
     FileHandler(String baseName, Header h, PanelMenu pm, SubstrateGrid sg){
         fileBaseName = baseName;
@@ -15,6 +16,14 @@ public class FileHandler{
     
     void setBaseName(String baseName){
         fileBaseName = baseName;
+    }
+
+    void setProjectIsLoaded(boolean isLoaded) {
+      projectLoaded = isLoaded;  
+    }
+
+    boolean getProjectIsLoaded() {
+      return projectLoaded;  
     }
     
     void writeStructureFile(){
@@ -95,7 +104,7 @@ public class FileHandler{
             panelMenu.magnetPanel.updateZones();
 
             structureFileIn.close();
-            
+            setProjectIsLoaded(true);
         } catch(Exception e){}
     }
     
@@ -146,7 +155,7 @@ public class FileHandler{
                            "\t<!-- There are two possible different methods for the LLG engine, the RK4 and the RKW2 - Runge Kutta 4th order and Runge Kutta Weak 2nd order -->\n" +
                            "\t<!-- Be mindfull that the RK4 method disconsiders the temperature -->\n" + 
                            "\t<property method=\"" + circuitParts[2] + "\"/>\n" + 
-                           "\t<!-- There are 4 simulationMode: exaustive, direct, repetitive and verbose -->\n" +
+                           "\t<!-- There are 4 simulationMode: exaustive, direct, repetitive, verbose and programmed -->\n" +
                            "\t<property simulationMode=\"" + circuitParts[1] + "\"/>\n" +
                            "\t<!-- The number of simulations to be done in the repetitive mode -->\n" +
                            "\t<property repetitions=\"" + circuitParts[3] + "\"/>\n" +
@@ -215,7 +224,7 @@ public class FileHandler{
         }
         xmlFileOut.println("</clockZone>");
        
-        /*name;type;clockZone;magnetization;fixed;w;h;tk;tc;bc;position;zoneColor;mimic*/
+        /*name;type;clockZone;magnetization;fixed;w;h;tk;tc;bc;position;zoneColor;mimic;programmedMagnetization*/
         ArrayList<String> magnets = sg.getMagnetsProperties();
         magnets.sort(String.CASE_INSENSITIVE_ORDER);
         HashMap<String,String> components = new HashMap<String,String>();
@@ -246,7 +255,9 @@ public class FileHandler{
             xmlFileOut.println("\t<item name=\"" + parts[0] + "\">\n\t\t<property component=\"" + components.get(component) + "\"/>\n" +
                                "\t\t<property myType=\"" + parts[1] + "\"/>\n\t\t<property fixedMagnetization=\"" + parts[4] + "\"/>\n" +
                                "\t\t<property position=\"" + parts[10] + "\"/>\n\t\t<property clockZone=\"" + zoneIndex.get(parts[2]) + "\"/>\n" +
-                               "\t\t<property magnetization=\"" + parts[3] + "\"/>\n" + ((parts.length > 12)?("\t\t<property mimic=\"" + parts[12] + "\"/>\n"):("")) + "\t</item>");
+                               "\t\t<property magnetization=\"" + parts[3] + "\"/>\n" + 
+                               ((parts[4] == "true" && parts.size() >= 14) ? ("\t\t<property programmedMagnetization=\"" + parts[13] + "\"/>\n") : ("")) +
+                               ((parts.length > 12)?("\t\t<property mimic=\"" + parts[12] + "\"/>\n"):("")) + "\t</item>");
         }
         xmlFileOut.println("</design>");
         xmlFileOut.flush();
