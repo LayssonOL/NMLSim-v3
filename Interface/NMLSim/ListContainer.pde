@@ -35,6 +35,10 @@ class ListContainer{
     boolean isIn(String element){
         return items.contains(element);
     }
+
+    Integer size(){
+        return items.size();
+    }
     
     boolean hasExtraItems(ArrayList <String> options) {
         for(int i=0; i<items.size(); i++)
@@ -185,15 +189,12 @@ class ListContainer{
             }
         }
         if(editEnabled){
-            print("\n## List Container - Edit enabled: ", editEnabled);
             for(index=0; index<edit.size(); index++){
                 if(edit.get(index).mousePressedMethod()) {
-                  print("\n## Edit index: ", index);
                   break;
                 }
             }
-            if(index < edit.size()){
-                print("\n## Index < Edit.size()");
+            if(index < edit.size()){ 
                 edit.get(index).deactivate();
                 editionField = items.get(index);
                 return true;

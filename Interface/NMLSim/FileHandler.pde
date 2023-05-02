@@ -132,6 +132,7 @@ public class FileHandler{
         structureFileOut.println("Magnets");
         structureFileOut.println(substrateGrid.randomName);
         for(String m : magnets){
+            print("\n## writeConfigFile - magnet: " + m);
             structureFileOut.println(m);
         }
         
@@ -224,7 +225,7 @@ public class FileHandler{
         }
         xmlFileOut.println("</clockZone>");
        
-        /*name;type;clockZone;magnetization;fixed;w;h;tk;tc;bc;position;zoneColor;mimic;programmedMagnetization*/
+        /*name;type;clockZone;magnetization;fixed;w;h;tk;tc;bc;position;zoneColor;programmedMagnetization;mimic*/
         ArrayList<String> magnets = sg.getMagnetsProperties();
         magnets.sort(String.CASE_INSENSITIVE_ORDER);
         HashMap<String,String> components = new HashMap<String,String>();
@@ -256,7 +257,7 @@ public class FileHandler{
                                "\t\t<property myType=\"" + parts[1] + "\"/>\n\t\t<property fixedMagnetization=\"" + parts[4] + "\"/>\n" +
                                "\t\t<property position=\"" + parts[10] + "\"/>\n\t\t<property clockZone=\"" + zoneIndex.get(parts[2]) + "\"/>\n" +
                                "\t\t<property magnetization=\"" + parts[3] + "\"/>\n" + 
-                               ((parts[4] == "true" && parts.length >= 14) ? ("\t\t<property programmedMagnetization=\"" + parts[13] + "\"/>\n") : ("")) +
+                               ((parts[4] == "true" && parts.length >= 12) ? ("\t\t<property programmedMagnetization=\"" + parts[11] + "\"/>\n") : ("")) +
                                ((parts.length > 12)?("\t\t<property mimic=\"" + parts[12] + "\"/>\n"):("")) + "\t</item>");
         }
         xmlFileOut.println("</design>");

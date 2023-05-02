@@ -75,6 +75,14 @@ class SubstrateGrid{
         bulletHS = hs;
         bulletVS = vs;
     }
+
+    HashMap<String, Magnet> getMagnetsList() {
+      return this.magnets;
+    }
+
+    Magnet getMagnet(String magName) {
+      return this.magnets.get(magName);
+    }
     
     void addMagnet(String label, String structure){
         if(structure.contains(":")){
@@ -756,9 +764,10 @@ class Magnet{
 
     void setProgrammedMagnetization(ArrayList<String> progMags) {
       this.progMagnetizations = progMags;
+      this.setProgMagnetizationInStructure();
     }
 
-    void addProgMag(Integer magVal, Integer duration) {
+    void addProgMag(String magVal, String duration) {
       this.progMagnetizations.add(magVal + "#" + duration);
     }
     
@@ -772,6 +781,26 @@ class Magnet{
             for(int i=0; i<parts.length; i++)
                 magStr += parts[i] + ";";
         }
+    }
+
+    void setProgMagnetizationInStructure(){
+      String [] parts = magStr.split(";");
+      String progMag = "";
+      for (Integer i = 0; i < progMagnetizations.size(); i++) { 
+        if (i == progMagnetizations.size()) {
+          progMag += progMagnetizations.get(i);
+        } else {
+          progMag += progMagnetizations.get(i) + ",";
+        }
+      }
+      if(parts.length >= 12){
+          magStr = "";
+          parts[11] = progMag;
+          for(int i=0; i<parts.length; i++)
+              magStr += parts[i] + ";";
+      } else {
+        magStr += progMag + ";";
+      }
     }
     
     void changeZone(String zName, Integer zColor){

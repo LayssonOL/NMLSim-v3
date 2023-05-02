@@ -67,6 +67,7 @@ class PanelMenu{
         simPanel = new SimulationPanel(x, y-ph, pw, ph);
         phasePanel = new PhasePanel(x, y-ph, pw, ph, simPanel);
         dynMagPanel = new DynMagPanel(x, y-ph, pw, ph, simPanel);
+        dynMagPanel.setSubstrateGrid(substrateGrid);
         zonePanel = new ZonePanel(x, y-ph, pw, ph, phasePanel);
         phasePanel.setZonePanel(zonePanel);
         simPanel.setZonePanel(zonePanel);

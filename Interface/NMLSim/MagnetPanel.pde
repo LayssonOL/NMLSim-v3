@@ -243,7 +243,7 @@ class MagnetPanel{
     
     void setEditing(String structure, String name){
         if(structure.contains(":") || structure.equals("")){
-            isEditing = false;
+            isEditing = true;
             substrateGrid.isEditingMagnet = false;
             return;
         }
