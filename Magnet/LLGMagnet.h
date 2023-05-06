@@ -23,6 +23,7 @@ private:
 	string id;	//ID
 	double magnetization[3];	//Magnetization vector [M_x, M_y, M_z]
 	dynMagMap programmedMagnetization;	//An array of Magnetization vectors [M_x, M_y, M_z] indexed by the period of time
+  int progSimReleasingThreshold;
 	double initialMagnetization[3];	//Initial magnetization value
 	double newMagnetization[3];	//Temporary magnetization value (the magnetization in the next time step)
 	vector <Neighbor *> neighbors;	//List of neighbors
@@ -74,7 +75,7 @@ public:
 	//Compute the magnetization
 	void calculateMagnetization(ClockZone * zone);
 	//Compute the programmed magnetization
-	void calculateProgrammedMagnetization(ClockZone * zone);
+	void calculateProgrammedMagnetization(ClockZone * zone, double const& simStep);
 	//Build the magnet from a description vector
 	void buildMagnet(vector <string> descParts);
 	//Returns the magnetization
@@ -116,6 +117,10 @@ public:
 	vector <Neighbor *> getNeighbors();
 	//Set the mimic magnet
 	void setMimic(Magnet * mimic);
+  //Get progSimFreedomThreshold
+  int getProgSimFreedomThreshold();
+  //Set progSimFreedomThreshold
+  int setProgSimFreedomThreshold(int val);
 };
 
 #endif

@@ -1,6 +1,6 @@
 class DynMagPanel{
     float x, y, w, h;
-    TextBox name, magName, duration, currentMagnetization;
+    TextBox name, magName, duration, currentMagnetization, releasingThreshold;
     Button saveButton, newButton, clearButton, cancelButton;
     color panelColor, textColor;
     SimulationPanel sp;
@@ -35,6 +35,9 @@ class DynMagPanel{
         
         duration = new TextBox("Duration", 0, 0, w-20);
         duration.setValidationType("Integer");
+
+        releasingThreshold = new TextBox("Releasing Threshold", 0, 0, w-20);
+        releasingThreshold.setValidationType("IntegerPos");
         
         saveButton = new Button("Save", "Saves the changes made on the magnetization", sprites.smallSaveIconWhite, 0, 0);
         cancelButton = new Button("Cancel", "Cancel the changes made in the current magnetization", sprites.cancelIconWhite, x+w-80, y+h-30);
@@ -71,14 +74,15 @@ class DynMagPanel{
         auxY += aux+5;
         duration.updatePosition(x+10,auxY);
         auxY += aux+5;
+        releasingThreshold.updatePosition(x+10,auxY);
+        auxY += aux+5;
         
 
         if(name.validateText()) {
-            if(sp.getEngine().equals("LLG") && dynMagPairs.isIn(name.getText())){
+            if(sp.getEngine().equals("LLG") && dynMagPairs.size() > 0 && validateAllFields()){
                 saveButton.isTransparent = (!validateAllFields());
                 saveButton.setPosition(x+w-90,auxY);
                 saveButton.drawSelf();
-                newButton.isValid = false;
                 saveButton.isValid = true;
             } else {
                 newButton.isTransparent = (!validateAllFields());
@@ -98,6 +102,7 @@ class DynMagPanel{
         if(isEditing){
             saveButton.isTransparent = !(name.validateText() && currentMagnetization.validateText() && duration.validateText());
             saveButton.drawSelf();
+            cancelButton.setPosition(x+w-120,auxY);
             cancelButton.drawSelf();
         }
         if(!isEditing){
@@ -115,6 +120,7 @@ class DynMagPanel{
         name.drawSelf();
         currentMagnetization.drawSelf();
         duration.drawSelf();
+        releasingThreshold.drawSelf();
         
         strokeWeight(4);
         stroke(color(255,255,255));
@@ -148,7 +154,7 @@ class DynMagPanel{
               preview.addSeires("Magnetization",
                       new float[][]{
                           {0,Float.parseFloat(initData[0])},
-                          {Float.parseFloat(duration.getText()),Float.parseFloat(endData[0])}
+                          {Float.parseFloat(duration.getText()),Float.parseFloat(endData[0])},
                           },
                       color(0,0,255));
           }
@@ -163,6 +169,7 @@ class DynMagPanel{
     }
 
     void setEditing(String structure, String name){
+        reset();
         if(structure.contains(":") || structure.equals("")){
             isEditing = true;
             substrateGrid.isEditingMagnet = false;
@@ -171,11 +178,15 @@ class DynMagPanel{
         //type;clockZone;magnetization;fixed;w;h;tc;bc;position;zoneColor;programmedMagnetization
         editingStructure = structure;
         String fields[] = structure.split(";");
-        if (fields.length >= 12) {
+        if (fields.length > 11) {
           loadDynMagPairs(fields[11]);
+          if (fields.length > 12) {
+            this.releasingThreshold.setText(fields[12]);
+          }
         } else {
           this.currentMagnetization.setText("");
           this.duration.setText("");
+          this.releasingThreshold.setText("");
         }
         this.magName.setText(name);
     }
@@ -185,6 +196,7 @@ class DynMagPanel{
         name.setText("");
         duration.setText("");
         currentMagnetization.setText("");
+        releasingThreshold.setText("");
         dynMagPairs.clearList();
         dynMagValues.clear();
     }
@@ -224,6 +236,7 @@ class DynMagPanel{
             name.resetText();
             duration.resetText();
             currentMagnetization.resetText();
+            releasingThreshold.resetText();
         }
         if(!isEditing && newButton.mousePressedMethod()){
             newButton.deactivate();
@@ -251,6 +264,7 @@ class DynMagPanel{
                 if(this.substrateGrid != null) {
                   Magnet currentMag = this.substrateGrid.getMagnet(this.magName.getText());
                   if (currentMag != null) {
+                    currentMag.setReleasingThreshold(this.releasingThreshold.getText());
                     currentMag.setProgrammedMagnetization(this.getDynMagValuesToSave());
                   }
                 }
@@ -275,6 +289,7 @@ class DynMagPanel{
                 if(this.substrateGrid != null) {
                   Magnet currentMag = this.substrateGrid.getMagnet(this.magName.getText());
                   if (currentMag != null) {
+                    currentMag.setReleasingThreshold(this.releasingThreshold.getText());
                     currentMag.setProgrammedMagnetization(this.getDynMagValuesToSave());
                   }
                 }
@@ -301,6 +316,7 @@ class DynMagPanel{
         hit = hit | name.mousePressedMethod();
         hit = hit | currentMagnetization.mousePressedMethod();
         hit = hit | duration.mousePressedMethod();
+        hit = hit | releasingThreshold.mousePressedMethod();
         return hit;
     }
 
@@ -314,6 +330,10 @@ class DynMagPanel{
             return;
         }
         if(duration.keyPressedMethod() && (key == ENTER | key == TAB)){
+            releasingThreshold.select();
+            return;
+        }
+        if(releasingThreshold.keyPressedMethod() && (key == ENTER | key == TAB)){
             if (validateAllFields()) { 
               newButton.isValid = true;
               newButton.isTransparent = false;

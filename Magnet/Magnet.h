@@ -22,7 +22,7 @@ public:
 	//Compute the magnetization for the next step of time
 	virtual void calculateMagnetization(ClockZone * zone) = 0;
 	//Compute the magnetization for the next step of time
-	virtual void calculateProgrammedMagnetization(ClockZone * zone) = 0;
+	virtual void calculateProgrammedMagnetization(ClockZone * zone, double const& simStep) = 0;
 	//Update the magnetization
 	virtual void updateMagnetization() = 0;
 	//Update the programmed magnetization

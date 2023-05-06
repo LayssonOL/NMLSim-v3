@@ -8,7 +8,7 @@
 	<!-- Be mindfull that the RK4 method disconsiders the temperature -->
 	<property method="RK4"/>
 	<!-- There are 4 simulationMode: exaustive, direct, repetitive and verbose -->
-	<property simulationMode="verbose"/>
+	<property simulationMode="programmed"/>
 	<!-- The number of simulations to be done in the repetitive mode -->
 	<property repetitions="10"/>
 	<!-- The report time step. Starting at time 0, the program reports at each reportStep. Only used in verbose mode -->
@@ -22,7 +22,7 @@
 	<!-- Discretization of time in nanoseconds. It's highly recommended using very low timeStep -->
 	<property timeStep="0.0001"/>
 	<!-- Simulation Duration in nanoseconds -->
-	<property simTime="25.0"/>
+	<property simTime="50.0"/>
 	<!-- Properties for the heavy material for spin hall effect -->
 	<property spinAngle="0.4"/>
 	<property spinDifusionLenght="3.5"/>
@@ -157,11 +157,12 @@
 	<item name="mag1">
 		<property component="magIn"/>
 		<property myType="regular"/>
-		<property fixedMagnetization="false"/>
+		<property fixedMagnetization="true"/>
 		<property position="60.0,0.0"/>
 		<property clockZone="0"/>
 		<property magnetization="0.99,0.141,0.0"/>
-		<property dynamicMagnetization="1-5,0-5,0"/>
+		<property programmedMagnetization="1#20,-1#20"/>
+		<property freedomThreshold="30"/>
 	</item>
 	<item name="mag2">
 		<property component="magIn"/>

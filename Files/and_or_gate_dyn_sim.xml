@@ -300,6 +300,7 @@
 		<property clockZone="0"/>
 		<property magnetization="0.141,0.99,0"/>
 		<property programmedMagnetization="-1#40, 1#20, -1#20, 1#40"/>
+		<property freedomThreshold="80"/>
 	</item>
 	<item name="Magnet_137_2">
 		<property component="component_4"/>

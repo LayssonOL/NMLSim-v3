@@ -57,7 +57,7 @@ void ClockController::programmedNextTimeStep(double const& simStep){
 		vector<Magnet *> magnets = zones[i]->getAllMagnets();
 		//Update their magnets magnetization
 		for(int j=0; j<magnets.size(); j++){
-			magnets[j]->calculateProgrammedMagnetization(zones[i]);
+			magnets[j]->calculateProgrammedMagnetization(zones[i], simStep);
 		}
 		//Update the values
 		for(int j=0; j<magnets.size(); j++){

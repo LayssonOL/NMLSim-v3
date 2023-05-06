@@ -619,11 +619,12 @@ class Magnet{
     float w, h, bottomCut, topCut, xMag, yMag, x, y;
     String magStr, name, groupName, zone, mimic = "";
     ArrayList<String> progMagnetizations;
+    String releasingThreshold;
     color clockZone;
     boolean isTransparent = false, isSelected = false, zoneViewMode = true;
     HitBox hitbox;
     
-    /*MagStr = type;clockZone;magnetization;fixed;w;h;tk;tc;bc;position;zoneColor;progMagnetization;mimic*/
+    /*MagStr = type;clockZone;magnetization;fixed;w;h;tk;tc;bc;position;zoneColor;progMagnetization;releasingThreshold;mimic*/
     
     Magnet(String magStr, String name, boolean viewMode){
         this.magStr = magStr;
@@ -632,9 +633,13 @@ class Magnet{
         this.name = name;
         this.progMagnetizations = new ArrayList<String>();
         String parts[] = magStr.split(";");
-        if(parts.length > 12){
-            this.mimic = parts[12];
+        if(parts.length > 11 && !parts[11].contains("#")) {
+            this.mimic = parts[11];
         }
+        if (parts.length > 13) {
+          this.mimic = parts[13];
+        }
+
         if(parts[2].contains(",")){
             String [] aux = parts[2].split(",");
             xMag = Float.parseFloat(aux[0]);
@@ -653,12 +658,15 @@ class Magnet{
         y = Float.parseFloat(aux[1]);
         clockZone = Integer.parseInt(parts[10]);
         hitbox = new HitBox(0,0,0,0);
-        if (parts.length >= 12) {
+        if (parts.length > 11 && parts[11].contains("#")) {
           String progMags[] = parts[11].split(","); 
           for (String pair: progMags) {
             // String magDurationPair = pair.split("#");
             // Storing paris of Time duration by magnetization value as key and value, respectively
             progMagnetizations.add(pair);
+          }
+          if (parts.length > 12) {
+            releasingThreshold = parts[12];
           }
         }
     }
@@ -756,6 +764,14 @@ class Magnet{
     float getYMag(){
         return this.yMag;
     }
+
+    String getReleasingThreshold() {
+      return this.releasingThreshold;
+    }
+
+    void setReleasingThreshold(String val) {
+      this.releasingThreshold = val;
+    }
     
     void setMagnetization(float xMag, float yMag){
         this.xMag = xMag;
@@ -787,19 +803,27 @@ class Magnet{
       String [] parts = magStr.split(";");
       String progMag = "";
       for (Integer i = 0; i < progMagnetizations.size(); i++) { 
-        if (i == progMagnetizations.size()) {
+        if (i == (progMagnetizations.size() - 1)) {
           progMag += progMagnetizations.get(i);
         } else {
           progMag += progMagnetizations.get(i) + ",";
         }
       }
-      if(parts.length >= 12){
-          magStr = "";
-          parts[11] = progMag;
-          for(int i=0; i<parts.length; i++)
-              magStr += parts[i] + ";";
+      if(parts.length > 11){
+        magStr = "";
+        parts[11] = progMag;
+        for(int i=0; i<parts.length; i++)
+            magStr += parts[i] + ";";
       } else {
         magStr += progMag + ";";
+      }
+      if(parts.length > 12){
+        magStr = "";
+        parts[12] = releasingThreshold;
+        for(int i=0; i<parts.length; i++)
+            magStr += parts[i] + ";";
+      } else {
+        magStr += releasingThreshold + ";";
       }
     }
     

@@ -55,6 +55,7 @@ LLGMagnet::LLGMagnet(string id, FileReader * fReader){
 		this->bulk_sha = stod(fReader->getProperty(CIRCUIT, "spinAngle"));
 		this->l_shm = stod(fReader->getProperty(CIRCUIT, "spinDifusionLenght"));
 		this->th_shm = stod(fReader->getProperty(CIRCUIT, "heavyMaterialThickness"));
+    this->progSimReleasingThreshold = -1;
 		LLGMagnet::rk4Method = (fReader->getProperty(CIRCUIT, "method") == "RK4");
 		//If the method is the RK4, the temperature MUST be 0 K
 		if(LLGMagnet::rk4Method)
@@ -73,6 +74,12 @@ LLGMagnet::LLGMagnet(string id, FileReader * fReader){
 		this->magnetization[i] = stod(parts[i]);
 		this->initialMagnetization[i] = this->magnetization[i];
 	}
+
+  //Loading the realeasingThreshold
+  //{{
+  string releasingThreshold = fReader->getItemProperty(DESIGN, id, "releasingThreshold");
+  this->progSimReleasingThreshold = releasingThreshold != "" && (std::all_of(releasingThreshold.begin(), releasingThreshold.end(), ::isdigit)) ? stoi(releasingThreshold) : -1;
+  //}}
 
 	//Programmed magnetization initialization
   //{{{
@@ -94,8 +101,8 @@ LLGMagnet::LLGMagnet(string id, FileReader * fReader){
       vector<string> magTime = splitString(mp, '#');
       double mag = stod(magTime[0]);
       double magDuration = stod(magTime[1]);
-      cout << "\nMagTime[0] " << mag << endl;
-      cout << "MagTime[1] " << magDuration << endl;
+      // cout << "\nMagTime[0] " << mag << endl;
+      // cout << "MagTime[1] " << magDuration << endl;
 
       if (mag == 1) {
         // magnetization value to represent Boolean 1
@@ -119,25 +126,7 @@ LLGMagnet::LLGMagnet(string id, FileReader * fReader){
       double total = (computedSimTime + magDuration);
       if (total > simTime) { total = computedSimTime + (simTime - computedSimTime); } 
 
-      // for (double i = computedSimTime; i < total; i += timeStp) {
-      //   // if (std::find(dynMagKeys.begin(), dynMagKeys.end(), i) != dynMagKeys.end()) { continue; }
-      //   // if (this->programmedMagnetization.count(i) != 0) { 
-      //   //   cout << "Já contém " << i << endl;
-      //   //   continue; 
-      //   // }
-      //   // this->programmedMagnetization.emplace(i, magnetizationVector);
-      //   // this->programmedMagnetization[i] = magnetizationVector;
-      //   // pair<dynMagMap::iterator, bool> result = this->programmedMagnetization.insert(make_pair(i, magnetizationVector));
-      //   // cout << "Result first " << result.first->first << " - second " << result.second << endl;
-      //   this->programmedMagnetization.insert(make_pair(i, magnetizationVector));
-      // }
-      // if (total == simTime) {
-        // cout << "total == simTime" << endl;
-        // pair<dynMagMap::iterator, bool> result = this->programmedMagnetization.insert(make_pair(simTime, magnetizationVector));
-        // cout << "Result first " << result.first->first << " - second " << result.second << endl;
-        // this->programmedMagnetization[simTime] = magnetizationVector;
-        this->programmedMagnetization.insert(make_pair(total, magnetizationVector));
-      // }
+      this->programmedMagnetization.insert(make_pair(total, magnetizationVector));
       // }}}
 
       computedSimTime += magDuration;
@@ -147,20 +136,9 @@ LLGMagnet::LLGMagnet(string id, FileReader * fReader){
     }
 
     // for (auto p: this->programmedMagnetization) {
-    //   cout << "Registered key: " << p.first << endl;
-    //   auto vec = p.second;
-    //   cout << "Key: " << p.first << " X: " << vec[0] << " Y: " << vec[1] << " Z: " << vec[2] << endl;
+    //   cout << "Key: " << p.first << " X: " << p.second[0] << " Y: " << p.second[1] << " Z: " << p.second[2] << endl;
     // }
-    // dynMagMap::iterator it;
-    // for (it = this->programmedMagnetization.begin(); it != this->programmedMagnetization; i++) {
-    //   if (this->programmedMagnetization.find())
-    // }
-    for (auto p: this->programmedMagnetization) {
-      cout << "Key: " << p.first << " X: " << p.second[0] << " Y: " << p.second[1] << " Z: " << p.second[2] << endl;
-    }
   }
-  // this->printProgammedMagnetization();
-  // throw std::exception();
 
 	//Fixed magnetization
 	this->fixedMagnetization = (fReader->getItemProperty(DESIGN, id, "fixedMagnetization") == "true");
@@ -375,10 +353,15 @@ void LLGMagnet::calculateMagnetization(ClockZone * zone){
 }
 
 //Compute the programmed magnetization for the next time step
-void LLGMagnet::calculateProgrammedMagnetization(ClockZone * zone){
+void LLGMagnet::calculateProgrammedMagnetization(ClockZone * zone, double const& simStep){
   // If the magnet is an INPUT and has a vector of programmed magnetization values
   // We don't need to calculate the new magnetization
   if (this->fixedMagnetization && this->programmedMagnetization.size() > 0) {
+    if (this->progSimReleasingThreshold != -1 && simStep > this->progSimReleasingThreshold) {
+      this->fixedMagnetization = false;
+      this->calculateMagnetization(zone);
+      return;
+    } 
     return; 
   } 
   this->calculateMagnetization(zone);
@@ -477,7 +460,7 @@ void LLGMagnet::updateMagnetization(){
 void LLGMagnet::updateProgrammedMagnetization(double const& simStep) {
   if (this->fixedMagnetization && this->programmedMagnetization.size() > size_t{0}) {
     // cout << "## Update Programmed Magnetization - magnet ID: " << this->id << endl;
-    cout << "## Update Programmed Magnetization - simStep: " << simStep << endl;
+    // cout << "## Update Programmed Magnetization - simStep: " << simStep << endl;
     vector<double> dynMag{};
     for (auto p: this->programmedMagnetization) {
       if (simStep <= p.first) { 
@@ -492,7 +475,7 @@ void LLGMagnet::updateProgrammedMagnetization(double const& simStep) {
     this->magnetization[0] = dynMag[0];
     this->magnetization[1] = dynMag[1];
     this->magnetization[2] = dynMag[2];
-    cout << "New Mag" << " - X: " << this->magnetization[0] << " Y: " << this->magnetization[1] << " Z: " << this->magnetization[2] << endl;
+    // cout << "New Mag" << " - X: " << this->magnetization[0] << " Y: " << this->magnetization[1] << " Z: " << this->magnetization[2] << endl;
     return;
   } 
   this->updateMagnetization();

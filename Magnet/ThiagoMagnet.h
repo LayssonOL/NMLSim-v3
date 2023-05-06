@@ -40,7 +40,7 @@ public:
 	//Compute the future magnetization depending on the clock phase
 	void calculateMagnetization(ClockZone * zone);
 	//Compute the programmed magnetization
-	void calculateProgrammedMagnetization(ClockZone * zone);
+	void calculateProgrammedMagnetization(ClockZone * zone, double const& simStep);
 	//Update the current magnetization to the future magnetization
 	void updateMagnetization();
 	//Update the current programmed magnetization to the future magnetization

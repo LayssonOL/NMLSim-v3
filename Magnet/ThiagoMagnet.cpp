@@ -122,7 +122,7 @@ void ThiagoMagnet::calculateMagnetization(ClockZone * zone){
 }
 
 //Compute the programmed magnetization for the next time step
-void ThiagoMagnet::calculateProgrammedMagnetization(ClockZone * zone){
+void ThiagoMagnet::calculateProgrammedMagnetization(ClockZone * zone, double const& simStep){
   // If the magnet is an INPUT and has a vector of programmed magnetization values
   // We don't need to calculate the new magnetization
   if (this->fixedMagnetization && this->programmedMagnetization.size() > 0) {

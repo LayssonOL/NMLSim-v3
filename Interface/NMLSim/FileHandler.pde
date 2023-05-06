@@ -132,7 +132,6 @@ public class FileHandler{
         structureFileOut.println("Magnets");
         structureFileOut.println(substrateGrid.randomName);
         for(String m : magnets){
-            print("\n## writeConfigFile - magnet: " + m);
             structureFileOut.println(m);
         }
         
@@ -226,6 +225,7 @@ public class FileHandler{
         xmlFileOut.println("</clockZone>");
        
         /*name;type;clockZone;magnetization;fixed;w;h;tk;tc;bc;position;zoneColor;programmedMagnetization;mimic*/
+        /*Magnet_1;input;0;0.141,0.99,0,;true;50;150;15;0;0;3180.0,1610.0,;-16777216;-1#20,1#20,*/
         ArrayList<String> magnets = sg.getMagnetsProperties();
         magnets.sort(String.CASE_INSENSITIVE_ORDER);
         HashMap<String,String> components = new HashMap<String,String>();
@@ -257,8 +257,10 @@ public class FileHandler{
                                "\t\t<property myType=\"" + parts[1] + "\"/>\n\t\t<property fixedMagnetization=\"" + parts[4] + "\"/>\n" +
                                "\t\t<property position=\"" + parts[10] + "\"/>\n\t\t<property clockZone=\"" + zoneIndex.get(parts[2]) + "\"/>\n" +
                                "\t\t<property magnetization=\"" + parts[3] + "\"/>\n" + 
-                               ((parts[4] == "true" && parts.length >= 12) ? ("\t\t<property programmedMagnetization=\"" + parts[11] + "\"/>\n") : ("")) +
-                               ((parts.length > 12)?("\t\t<property mimic=\"" + parts[12] + "\"/>\n"):("")) + "\t</item>");
+                               ((parts[4].equals("true") && parts.length > 12) ? parts[12].contains("#") ? ("\t\t<property programmedMagnetization=\"" + parts[12] + "\"/>\n") : ("\t\t<property mimic=\"" + parts[12] + "\"/>\n") : ("")) +
+                               ((parts[4].equals("true") && parts.length > 13) ? ("\t\t<property releasingThreshold=\"" + parts[13] + "\"/>\n") : ("")) +
+                               ((parts.length > 14)?("\t\t<property mimic=\"" + parts[14] + "\"/>\n"):("")) + 
+                               "\t</item>");
         }
         xmlFileOut.println("</design>");
         xmlFileOut.flush();

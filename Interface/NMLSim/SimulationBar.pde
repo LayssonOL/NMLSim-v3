@@ -389,8 +389,28 @@ class SimulationBar{
                 isRecording = false;
             }
             timelineRunning = false;
-        }
-        if(!panelMenu.getSimulationMode().equals("verbose") && timeline.mousePressedMethod()){
+        } else if(panelMenu.getSimulationMode().equals("programmed") && timeline.mousePressedMethod()){
+            Path p = Paths.get(fileSys.fileBaseName + "/simulation.csv");
+            if(!Files.exists(p)){
+                timeline.deactivate();
+                PopUp pop = new PopUp(((width-400)/2)*scaleFactor, ((height-100)/2)*scaleFactor, 400, 100, "Please perform a programmed simulation first!");
+                pop.activate();
+                pop.setAsTimer(80);
+                popCenter.setPopUp(pop);
+                return;
+            }
+            if(animationTime > 0){
+                animationTime = 1;
+                backwardSimulation();
+            }
+            loadSimulationResultsFile();
+            timelineEnabled = !timelineEnabled;
+            if(!timelineEnabled){
+                exportGif.deactivate();
+                isRecording = false;
+            }
+            timelineRunning = false;
+        } else if (!panelMenu.getSimulationMode().equals("verbose") && timeline.mousePressedMethod()){
             PopUp pop = new PopUp(((width-400)/2)*scaleFactor, ((height-100)/2)*scaleFactor, 400, 100, "Please perform a verbose simulation first!");
             pop.activate();
             pop.setAsTimer(80);
