@@ -198,7 +198,7 @@ class SimulationPanel{
             repetitions.updatePosition(x+10, auxY);
             auxY += aux+5;
         }
-        if(mode.getSelectedOption().equals("verbose")){
+        if(mode.getSelectedOption().equals("verbose") || mode.getSelectedOption().equals("programmed")){
             reportStep.updatePosition(x+10, auxY);
             auxY += aux+5;
         }

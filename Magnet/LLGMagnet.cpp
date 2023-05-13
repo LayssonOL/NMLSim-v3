@@ -1,7 +1,6 @@
 #include "LLGMagnet.h"
 #include <cstddef>
 #include <cstdio>
-#include <fmt/core.h>
 #include <iostream>
 #include <map>
 #include <sstream>
@@ -94,7 +93,10 @@ LLGMagnet::LLGMagnet(string id, FileReader * fReader){
 
     for(string mp: programmedMagParts) {
       if (computedSimTime > simTime) {
-        std::cout << "Comptued Sim Time bigger than or equal to Original Sim Time" << std::endl;
+        std::cout << "Comptued Sim Time = " << computedSimTime << std::endl;
+        std::cout << "Original Sim Time = " << simTime << std::endl;
+        std::cout << "Time Step = " << timeStep << std::endl;
+        std::cout << "Comptued Sim Time " << computedSimTime << " bigger than or equal to Original Sim Time" << simTime << std::endl;
         break; 
       }
 
