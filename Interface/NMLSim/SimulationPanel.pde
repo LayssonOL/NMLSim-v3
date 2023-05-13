@@ -289,7 +289,7 @@ class SimulationPanel{
         else{
             alpha.isActive = false;
         }
-        if(mode.getSelectedOption().equals("verbose")){
+        if(mode.getSelectedOption().equals("verbose") || mode.getSelectedOption().equals("programmed")){
             reportStep.drawSelf();
             reportStep.isActive = true;
         }
@@ -485,7 +485,7 @@ class SimulationPanel{
             if((key == ENTER | key == TAB) & !bulletSpacing.isSelected()){
                 if(mode.getSelectedOption().equals("Repetitive")){
                     repetitions.select();
-                } else if(mode.getSelectedOption().equals("Verbose")){
+                } else if(mode.getSelectedOption().equals("Verbose") || mode.getSelectedOption().equals("Programmed")){
                     reportStep.select();
                 } else if(engine.getSelectedOption().equals("LLG")){
                     alpha.select();

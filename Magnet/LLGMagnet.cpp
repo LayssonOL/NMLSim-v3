@@ -93,10 +93,10 @@ LLGMagnet::LLGMagnet(string id, FileReader * fReader){
 
     for(string mp: programmedMagParts) {
       if (computedSimTime > simTime) {
-        std::cout << "Comptued Sim Time = " << computedSimTime << std::endl;
+        std::cout << "Computed Sim Time = " << computedSimTime << std::endl;
         std::cout << "Original Sim Time = " << simTime << std::endl;
         std::cout << "Time Step = " << timeStep << std::endl;
-        std::cout << "Comptued Sim Time " << computedSimTime << " bigger than or equal to Original Sim Time" << simTime << std::endl;
+        std::cout << "Computed Sim Time " << computedSimTime << " bigger than or equal to Original Sim Time" << simTime << std::endl;
         break; 
       }
 
