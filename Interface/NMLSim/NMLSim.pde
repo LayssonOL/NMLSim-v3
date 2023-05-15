@@ -1,6 +1,7 @@
 import static javax.swing.JOptionPane.*;
 import javax.swing.UIManager;
 import java.awt.Color;
+// import processing.svg.*;
 
 
 SpriteCenter sprites;
@@ -39,8 +40,8 @@ void setup(){
     //h.setSimulationBar(sb);
     
     if(displayWidth > 2560) {
-      screenHeight = 1080;
-      screenWidth = 1920;
+      screenHeight = 1440;
+      screenWidth = 2560;
       surface.setSize(screenWidth, screenHeight);
       scaleFactor = 1;
       sg = new SubstrateGrid(0, 105, screenWidth, (screenHeight * 0.855), cellW, cellH, screenWidth, screenHeight);
@@ -180,6 +181,9 @@ void openProject(File selectedPath){
         return;
     String fileBaseName = selectedPath.getAbsolutePath();
     Path p = Paths.get(fileBaseName + "/structures.str");
+    Path svgp = Paths.get(fileBaseName + "/circuit.svg");
+    // noLoop();
+    // beginRecord(SVG, fileBaseName + "/circuit.svg");
     if(!Files.exists(p)){
         return;
     }
@@ -192,6 +196,7 @@ void openProject(File selectedPath){
     fileSys.readConfigFile();
     pm.setProjectLoaded(fileSys.getProjectIsLoaded());
     ctrlPressed = altPressed = shiftPressed = false;
+    // endRecord();
 }
 
 void importStructures(File selectedPath){

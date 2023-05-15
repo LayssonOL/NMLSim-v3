@@ -4,6 +4,7 @@ import argparse
 import csv
 import sys
 import math
+import os
 
 # CLI argument parser
 parser = argparse.ArgumentParser(description='Script to build magnetization precession charts for NMLSim 2.0.')
@@ -35,6 +36,11 @@ if int(args.fontsz) < 1:
 
 # Save the file name on a variable to easy access
 fileName = args.input
+print("File name " + fileName)
+dirName = os.path.dirname(fileName)
+print("Dir name " + dirName)
+svg_path = os.path.join(dirName, "simulation_result.svg")
+print("SVG file path " + svg_path)
 # Data matrix
 matrix = []
 
@@ -139,6 +145,7 @@ if args.mode == 'split':
 		plotIndex += 1
 	# Adjust figure configuration and show
 	plt.subplots_adjust(left=0.05, right=0.99, top=0.99, bottom=0.05, hspace=0.3)
+	plt.savefig(svg_path, bbox_inches='tight')
 	plt.show()
 # Comparative mode plots all particles in the same chart
 elif args.mode == 'comparative':
@@ -172,4 +179,6 @@ elif args.mode == 'comparative':
 	plt.ylim(-1.1,1.1)
 	# Adjust figure configuration and show
 	plt.subplots_adjust(left=0.05, right=0.99, top=0.99, bottom=0.05)
+	plt.savefig(svg_path, bbox_inches='tight')
 	plt.show()
+  
