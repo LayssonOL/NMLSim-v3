@@ -1,2 +1,5 @@
 Projects/
 Project/
+Objs/*.o
+*.o
+**nmlsim*
