@@ -1,5 +1,11 @@
 Projects/
 Project/
 Objs/*.o
+Objs/*
+Objs/**
+ModFiles/*
+ModFiles/**
+ModFiles/*.mod
+*.mod
 *.o
 **nmlsim*
