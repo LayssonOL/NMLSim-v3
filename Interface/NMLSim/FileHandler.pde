@@ -1,3 +1,5 @@
+import processing.svg.*;
+
 public class FileHandler{
     String fileBaseName;
     Header header;
@@ -33,7 +35,6 @@ public class FileHandler{
             structureFileOut.println(s);
         structureFileOut.flush();
         structureFileOut.close();
-        
     }
     
     void readStructureFile(){
@@ -62,6 +63,13 @@ public class FileHandler{
             panelMenu.importStructureFile(structures);
             structureFileIn.close();
         } catch(Exception e){}
+    }
+
+    void writeCircuitSVG() {
+        beginRecord(SVG, fileBaseName + "/circuit.svg");
+        substrateGrid.drawSelfWithoutScrollbars();
+        endRecord();
+        print("\n Circuit SVG stored successfully - ", keyPressed);
     }
     
     void readConfigFile(){

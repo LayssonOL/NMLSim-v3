@@ -40,8 +40,8 @@ void setup(){
     //h.setSimulationBar(sb);
     
     if(displayWidth > 2560) {
-      screenHeight = 1440;
-      screenWidth = 2560;
+      screenHeight = 1200;
+      screenWidth = 1920;
       surface.setSize(screenWidth, screenHeight);
       scaleFactor = 1;
       sg = new SubstrateGrid(0, 105, screenWidth, (screenHeight * 0.855), cellW, cellH, screenWidth, screenHeight);
@@ -53,19 +53,19 @@ void setup(){
       fileSys = new FileHandler("", h, pm, sg);
       sb = new SimulationBar(0, (screenHeight * 0.973), screenWidth, 30, sg, pm);
       h.setSimulationBar(sb); 
-    //} 
-    //else if (displayWidth > 1366) {
-    //  surface.setSize(1920, 1080);
-    //  scaleFactor = 1;
-    //  sg = new SubstrateGrid(0, 105, 1920, 924, 10, 10, 1000, 5000);
-    //  sg.setHiddenDimensions(500,300,500,150);
-    //  sg.setBulletSpacing(60,120);
-    //  pm = new PanelMenu(0, 1000, 300, 500, sg);
-    //  h = new Header(0, 0, 1920, sg);
-    //  h.setPanelMenu(pm);
-    //  fileSys = new FileHandler("", h, pm, sg);
-    //  sb = new SimulationBar(0, 1020, 1920, 30, sg, pm);
-    //  h.setSimulationBar(sb); 
+    } 
+    else if (displayWidth > 1366) {
+      surface.setSize(1920, 1080);
+      scaleFactor = 1;
+      sg = new SubstrateGrid(0, 105, 1920, 924, 10, 10, 1000, 5000);
+      sg.setHiddenDimensions(500,300,500,150);
+      sg.setBulletSpacing(60,120);
+      pm = new PanelMenu(0, 1000, 300, 500, sg);
+      h = new Header(0, 0, 1920, sg);
+      h.setPanelMenu(pm);
+      fileSys = new FileHandler("", h, pm, sg);
+      sb = new SimulationBar(0, 1020, 1920, 30, sg, pm);
+      h.setSimulationBar(sb); 
     } else {
       surface.setSize(1280, 720);
       scaleFactor = 1;
@@ -87,7 +87,7 @@ void setup(){
     UI.put("OptionPane.background", new Color(116, 163, 117));
     UI.put("Panel.background", new Color(116, 163, 117));
     
-    print("\nFinish setup!!!");
+    println("Finish setup!!!");
 }
 
 void draw(){
@@ -121,6 +121,8 @@ void keyPressed(){
         altPressed = true;
     if(key == CODED && keyCode == SHIFT)
         shiftPressed = true;
+    if (key == 'r')
+        fileSys.writeCircuitSVG();
     h.keyPressedMethod();
     pm.keyPressedMethod();
     sb.keyPressedMethod();

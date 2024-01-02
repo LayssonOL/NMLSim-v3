@@ -411,6 +411,118 @@ class SubstrateGrid{
             rect(initMouseX, initMouseY, (mouseX-initMouseX), (mouseY-initMouseY));
         }
     }
+
+    void drawSelfWithoutScrollbars(){
+        // if(isLightColor){
+        //     fill(lightBG);
+        //     stroke(lightBG);
+        //     rect(x, y, w, h);
+        // } else{
+        //     fill(darkBG);
+        //     stroke(darkBG);
+        //     rect(x, y, w, h);
+        // }
+        
+        float xOrigin = hScroll.getIndex()*cellW, yOrigin = vScroll.getIndex()*cellH;
+        
+        if(isRulerActive){
+            float cont = xOrigin;
+            float cellPxW = (normalization)*zoomFactor/10;
+            float auxX = x;
+            float cellPxH = (normalization)*zoomFactor/10;
+            float auxY = y+h;
+            if(isLightColor)
+                stroke(lightRuler);
+            else
+                stroke(darkRuler);
+            while(auxX < x+w && cont <= gridW){
+                float temp = ((gridH-yOrigin)/cellH)*cellPxH;
+                line(auxX, y+h, auxX, y+h-((temp>h)?h:temp));
+                auxX += cellPxW;
+                cont += cellW;
+            }
+            cont = yOrigin;
+            while(auxY > y && cont <= gridH){
+                float temp = ((gridW-xOrigin)/cellW)*cellPxW;
+                line(x, auxY, x+((temp>w)?w:temp), auxY);
+                auxY -= cellPxH;
+                cont += cellH;
+            }
+        }
+        
+        if(isBulletActive){
+            if(isLightColor){
+                fill(lightBullet);
+                stroke(lightBullet);
+            } else{
+                fill(darkBullet);
+                stroke(darkBullet);
+            }
+            float contW = bulletHS/2, contH = bulletVS/2;
+            float bulletPxW = (normalization)*zoomFactor/10;
+            float auxX = -(xOrigin+bulletHS/2);
+            while(auxX < 0)
+                auxX += bulletHS;
+            auxX = auxX/cellW*(normalization)*zoomFactor/10 + x;
+            float bulletPxH = (normalization)*zoomFactor/10;
+            float auxY = yOrigin+bulletVS/2;
+            while(auxY > 0)
+                auxY -= bulletVS;
+            auxY = auxY/cellH*(normalization)*zoomFactor/10 + y + h;
+            while(auxY >= y && contH <= gridH){
+                while(auxX-bulletPxW <= x+w && contW <= gridW){
+                    ellipseMode(CORNER);
+                    ellipse(auxX-bulletPxW, auxY, bulletPxW, bulletPxH);
+                    auxX += (((bulletHS/cellW)*normalization)*zoomFactor/10);
+                    contW  += bulletHS;
+                }
+                contW = bulletHS/2;
+                auxX = -(xOrigin+bulletHS/2);
+                while(auxX < 0)
+                    auxX += bulletHS;
+                auxX = auxX/cellW*(normalization)*zoomFactor/10 + x;
+                auxY -= (((bulletVS/cellH)*normalization)*zoomFactor/10);
+                contH += bulletVS;
+            }
+        }
+
+        try{
+            for(Magnet mag : magnets.values()){
+                mag.drawSelf(xOrigin, yOrigin, normalization, zoomFactor, x, y, w, h, cellW, cellH);
+            }
+            for(Magnet mag : magnets.values()){
+                if(!mag.getMimic().equals("")){
+                    Magnet mimicMag = magnets.get(mag.getMimic());
+                    if(mimicMag == null){
+                        mag.removeMimic();
+                    } else{
+                        float c1x = mag.getPixelCenterX(xOrigin, cellW, normalization, zoomFactor, x);
+                        float c1y = mag.getPixelCenterY(yOrigin, cellH, normalization, zoomFactor, y, h);
+                        float c2x = mimicMag.getPixelCenterX(xOrigin, cellW, normalization, zoomFactor, x);
+                        float c2y = mimicMag.getPixelCenterY(yOrigin, cellH, normalization, zoomFactor, y, h);
+                        fill(0,0,0,125);
+                        stroke(0,0,0,125);
+                        strokeWeight(5);
+                        ellipse(c2x-5, c2y-5, 10, 10);
+                        line(c2x, c2y, c1x, c1y);
+                        strokeWeight(1);
+                    }
+                }
+            }
+        } catch(Exception e){
+        }
+        
+        // onMouseOverMethod();
+        
+        // vScroll.drawSelf();
+        // hScroll.drawSelf();
+
+        // if(ctrlPressed && mousePressed){
+        //     fill(255,255,255,125);
+        //     stroke(0, 0, 0, 125);
+        //     rect(initMouseX, initMouseY, (mouseX-initMouseX), (mouseY-initMouseY));
+        // }
+    }
     
     void toggleMoving(){
         isMoving = !isMoving;
