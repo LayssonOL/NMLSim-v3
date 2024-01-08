@@ -25,7 +25,7 @@ class PanelMenu{
         substrateGrid = sg;
         
         textSize(fontSz);
-        float auxX = x+5, h = textAscent()+textDescent(), auxW;
+        float auxX = x+5, h = textAscent()+textDescent()+30, auxW;
         labels = new ArrayList<String>();
         hitboxes = new ArrayList<HitBox>();
         labels.add("Simulation");

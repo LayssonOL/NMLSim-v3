@@ -40,14 +40,14 @@ void setup(){
     //h.setSimulationBar(sb);
     
     if(displayWidth > 2560) {
-      screenHeight = 1200;
-      screenWidth = 1920;
+      screenHeight = 1366;
+      screenWidth = 2160;
       surface.setSize(screenWidth, screenHeight);
       scaleFactor = 1;
-      sg = new SubstrateGrid(0, 105, screenWidth, (screenHeight * 0.855), cellW, cellH, screenWidth, screenHeight);
+      sg = new SubstrateGrid(0, 105, screenWidth, (screenHeight * 0.875), cellW, cellH, screenWidth, screenHeight);
       sg.setHiddenDimensions(500,300,500,150);
       sg.setBulletSpacing(bulletXGap, bulletYGap);
-      pm = new PanelMenu(0, (screenHeight * 0.955), (screenWidth * 0.2), (screenHeight * 0.6), sg);
+      pm = new PanelMenu(0, (screenHeight * 0.955), (screenWidth * 0.2), (screenHeight * 0.5), sg);
       h = new Header(0, 0, screenWidth, sg);
       h.setPanelMenu(pm);
       fileSys = new FileHandler("", h, pm, sg);
